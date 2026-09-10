@@ -1,0 +1,42 @@
+# KeyMouseMate 键鼠自动化助手
+
+Windows 平台 RPA 工具——录制、调度、OCR 识别、弹窗处理、实时键鼠可视化，一站式自动化解决方案。
+
+🌐 **在线主页**：<https://softhubcc.github.io/KeyMouseMatePage/>
+
+[![Platform](https://img.shields.io/badge/platform-Windows%2010%2F11-blue)](https://www.microsoft.com/windows)
+[![Version](https://img.shields.io/badge/version-2.0.0-green)](https://github.com/SoftHubCC/KeyMouseMatePage/releases)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+
+## 📥 下载
+
+前往 [Releases](https://github.com/SoftHubCC/KeyMouseMatePage/releases) 页面下载最新版本：
+
+| 文件 | 说明 |
+|------|------|
+| `KeyMouseMate_install_v2.0.0.exe` | 安装版（一键安装） |
+| `KeyMouseMate_portable_v2.0.0.zip` | 便携版（解压即用） |
+
+## ✨ 核心功能
+
+- **20 种动作类型**：鼠标点击/拖动、键盘输入、OCR 识别、截图、流程控制等
+- **灵活循环与条件**：步骤级循环、变量表达式、OCR 关键词条件分支
+- **双引擎 OCR**：RapidOCR + PaddleOCR，中文识别准确率高
+- **弹窗监控处理**：后台监控指定区域，命中关键词自动处理
+- **Cron 定时调度**：标准 7 字段 Cron 表达式，快捷模板
+- **密码安全存储**：AES 加密密码库，日志自动打码
+- **实时可视化**：鼠标高亮、点击效果、按键显示、坐标、聚光灯、放大镜、浮动工具栏
+- **六套主题界面**：深浅色随心切换
+- **数据分离与备份**：程序设置与使用数据分区存放
+
+## 📖 使用文档
+
+在线手册见主页各章节，或下载安装版后在程序目录 `manual/` 下查看离线手册。
+
+## 🔗 相关仓库
+
+- 源码仓库：[SoftHubCC/KeyMouseMate](https://github.com/SoftHubCC/KeyMouseMate)（私有）
+
+---
+
+© 2026 软件驿站 SoftHub.CC · 支持 Windows 10 / 11
