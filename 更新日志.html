@@ -1,0 +1,1132 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-page-node-id="Y6vQCWUQ2PfculNJXSeLD5">
+<head data-page-node-id="Fev9UGZEz43WDEdXdjolvw">
+<meta charset="UTF-8" data-page-node-id="9tMhlSI9YsbAVnK5ziSVaT" />
+<meta name="viewport" content="width=device-width, initial-scale=1" data-page-node-id="MZTFmFOVdIhiqoL1H4Drlq" />
+<title>更新日志 · 键鼠自动化助手</title>
+<style>
+  * { box-sizing: border-box; }
+
+  :root {
+    --bg: #f5f6f8;
+    --card: #ffffff;
+    --text: #1f2430;
+    --muted: #6b7280;
+    --line: #e5e7eb;
+
+    --added:      #16a34a; /* 新增 绿 */
+    --changed:    #2563eb; /* 变更 蓝 */
+    --fixed:      #0891b2; /* 修复 青 */
+    --deprecated: #d97706; /* 废弃 琥珀 */
+    --removed:    #dc2626; /* 移除 红 */
+    --security:   #9333ea; /* 安全 紫 */
+    --perf:       #db2777; /* 性能 粉 */
+
+    --nav-primary: #1a73e8;
+    --nav-border:  #dadce0;
+    --nav-text:    #5f6368;
+  }
+
+  /* 用 data-cat 把颜色注入变量 --c，供标题圆点和列表标记复用
+     ⚠️ 七类颜色为固定约定，永不改动：新增=绿 变更=蓝 修复=青 废弃=琥珀 移除=红 安全=紫 性能=粉 */
+  [data-cat="added"]      { --c: var(--added); }
+  [data-cat="changed"]    { --c: var(--changed); }
+  [data-cat="fixed"]      { --c: var(--fixed); }
+  [data-cat="deprecated"] { --c: var(--deprecated); }
+  [data-cat="removed"]    { --c: var(--removed); }
+  [data-cat="security"]   { --c: var(--security); }
+  [data-cat="perf"]       { --c: var(--perf); }
+
+  /* 筛选按钮按 data-filter 取同一套分类色 */
+  .filters button[data-filter="added"]      { --c: var(--added); }
+  .filters button[data-filter="changed"]    { --c: var(--changed); }
+  .filters button[data-filter="fixed"]      { --c: var(--fixed); }
+  .filters button[data-filter="deprecated"] { --c: var(--deprecated); }
+  .filters button[data-filter="removed"]    { --c: var(--removed); }
+  .filters button[data-filter="security"]   { --c: var(--security); }
+  .filters button[data-filter="perf"]       { --c: var(--perf); }
+
+  body {
+    margin: 0;
+    padding: 0 0 80px;
+    background: var(--bg);
+    color: var(--text);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC",
+                 "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+    line-height: 1.7;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* ---------- 顶部导航（与用户手册保持一致） ---------- */
+  nav {
+    position: sticky; top: 0; z-index: 200;
+    background: #fff; border-bottom: 1px solid var(--nav-border);
+    box-shadow: 0 1px 4px rgba(0,0,0,.06);
+    height: 56px; display: flex; align-items: center; padding: 0 24px;
+  }
+  .nav-brand { font-size: 16px; font-weight: 700; color: var(--nav-primary); letter-spacing: .5px; }
+  .nav-badge { margin-left: 12px; background: #e8f0fe; color: var(--nav-primary); font-size: 11px; padding: 2px 8px; border-radius: 10px; font-weight: 600; }
+  .nav-link  { margin-left: auto; color: var(--nav-text); text-decoration: none; font-size: 13px; }
+  .nav-link:hover { color: var(--nav-primary); }
+
+  .page { max-width: 860px; margin: 40px auto 0; padding: 0 20px; }
+
+  /* ---------- 页头 ---------- */
+  .page-header { margin-bottom: 36px; }
+  .page-header h1 {
+    font-size: 32px; margin: 0 0 8px; letter-spacing: -0.02em;
+  }
+  .subtitle { margin: 0 0 4px; color: var(--muted); }
+  .meta { margin: 0; font-size: 13px; color: var(--muted); }
+  .meta a { color: var(--changed); text-decoration: none; }
+  .meta a:hover { text-decoration: underline; }
+
+  /* ---------- 筛选器（按钮颜色跟随各自分类色） ---------- */
+  .filters { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 20px; }
+  .filters button {
+    font: inherit; font-size: 13px;
+    padding: 5px 14px; border-radius: 999px;
+    border: 1.5px solid var(--c, var(--muted));
+    background: #fff; color: var(--c, var(--muted));
+    cursor: pointer; transition: all .15s ease;
+  }
+  .filters button:hover {
+    background: var(--c, var(--text));
+    border-color: var(--c, var(--text));
+    color: #fff;
+  }
+  .filters button[aria-pressed="true"] {
+    background: var(--c, var(--text));
+    border-color: var(--c, var(--text));
+    color: #fff; font-weight: 600;
+  }
+  /* 「全部」按钮保持中性色 */
+  .filters button[data-filter="all"] { --c: var(--muted); }
+
+  /* ---------- 时间线 ---------- */
+  .timeline { position: relative; padding-left: 28px; }
+  .timeline::before {
+    content: "";
+    position: absolute; left: 7px; top: 6px; bottom: 6px;
+    width: 2px; background: var(--line);
+  }
+
+  .release { position: relative; margin-bottom: 26px; }
+  .release[hidden] { display: none; }
+
+  /* 时间线圆点 */
+  .release::before {
+    content: "";
+    position: absolute; left: -28px; top: 28px;
+    width: 16px; height: 16px; border-radius: 50%;
+    background: #fff; border: 3px solid #cbd5e1;
+  }
+  .release.is-latest::before { border-color: var(--added); }
+
+  .release-card {
+    background: var(--card);
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    padding: 20px 22px;
+    box-shadow: 0 1px 2px rgba(16, 24, 40, .04);
+  }
+
+  /* ---------- 版本头 ---------- */
+  .release-head {
+    display: flex; align-items: baseline; flex-wrap: wrap; gap: 10px;
+    margin-bottom: 2px;
+  }
+  .version {
+    font-size: 20px; font-weight: 700; margin: 0;
+    letter-spacing: -0.01em; font-variant-numeric: tabular-nums;
+  }
+  .version a { color: inherit; text-decoration: none; }
+  .version a:hover { text-decoration: underline; }
+
+  .date {
+    font-size: 13px; color: var(--muted);
+    font-variant-numeric: tabular-nums;
+  }
+
+  .tag-latest, .tag-breaking {
+    font-size: 11px; font-weight: 600; line-height: 1;
+    padding: 4px 9px; border-radius: 999px;
+  }
+  .tag-latest   { background: #dcfce7; color: #15803d; }
+  .tag-breaking { background: #fee2e2; color: #b91c1c; }
+
+  /* ---------- 分类分组 ---------- */
+  .group { margin-top: 18px; }
+  .group[hidden] { display: none; }
+
+  .group-title {
+    display: flex; align-items: center; gap: 7px;
+    font-size: 13px; font-weight: 600; letter-spacing: .02em;
+    margin: 0 0 8px; color: var(--c);
+  }
+  .group-title::before {
+    content: "";
+    width: 8px; height: 8px; border-radius: 50%;
+    background: var(--c); flex: none;
+  }
+
+  .group ul { margin: 0; padding-left: 20px; }
+  .group li { margin: 5px 0; }
+  .group li::marker { color: var(--c); }
+
+  code {
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    font-size: .875em;
+    background: #f1f2f4;
+    padding: 2px 5px;
+    border-radius: 4px;
+  }
+
+  .page-footer {
+    margin-top: 36px; padding-top: 20px;
+    border-top: 1px solid var(--line);
+    font-size: 13px; color: var(--muted);
+  }
+  .page-footer a { color: var(--changed); text-decoration: none; }
+  .page-footer a:hover { text-decoration: underline; }
+
+  @media (max-width: 520px) {
+    body { padding: 0 0 60px; }
+    .release-card { padding: 16px; }
+    .page-header h1 { font-size: 26px; }
+    nav { padding: 0 14px; }
+  }
+</style>
+</head>
+<body data-page-node-id="xSuXMTIkAFuaAeMxlBFyPH">
+
+<nav data-page-node-id="KaLuOjlvlxvlDBmItywYfz">
+  <span class="nav-brand" data-page-node-id="psjgrATxI8AyCgk1ll3Ahl">键鼠自动化助手</span>
+  <span class="nav-badge" data-page-node-id="0nBxSARbAPL3mkdYMmsFci">更新日志</span>
+  <a class="nav-link" href="用户手册.html" data-page-node-id="eQF6DQg6qpWxLtzz0Y2VrJ">📖 用户手册</a>
+</nav>
+
+<div class="page" data-page-node-id="SPSZKsHsRmfhwm1GoodE1I">
+
+  <header class="page-header" data-page-node-id="rJ31ABbSdg1fJ69cUlPF74">
+    <h1 data-page-node-id="3M7eW3NY951IzOUMN531YO">更新日志</h1>
+    <!--p class="subtitle" data-page-node-id="TqYbPZkOsHtNo8nt3Z6RxX">键鼠自动化助手的功能层面更新都会记录在此文件，最新版本在最上方。</p>
+    <p class="meta" data-page-node-id="PIE79w4hvfz0B5zwE9LC4L">
+      版本号格式 <code data-page-node-id="M22c2D1jajqS4jNBdhqhRA">2.0.&lt;年&gt;&lt;年内天&gt;.&lt;时分&gt;</code>（如 2.0.26254.1229，26=2026 年、254=第 254 天），
+      由 <code data-page-node-id="ceui7C7wgAsdFelivUnIPF">rpa/</code> 源码最新修改时间自动生成，唯一维护点为 <code data-page-node-id="6OGjOZHzD5BhemXUyYGMfe">rpa/version.py</code>，
+      当前版本记录在根目录 <code data-page-node-id="KAqtJXDMVC3wxR2gTjv9q0">VERSION</code> 文件。
+    </p-->
+
+    <nav class="filters" aria-label="按变更类型筛选" data-page-node-id="Z8iuwOnHfAuf4MPgpZAaTx">
+      <button type="button" data-filter="all"     aria-pressed="true" data-page-node-id="dkuetlC9ht9Qzkx1bKvoLx">全部</button>
+      <button type="button" data-filter="added"   aria-pressed="false" data-page-node-id="1heU2mAtigFQIdxGXqkmvo">新增</button>
+      <button type="button" data-filter="changed" aria-pressed="false" data-page-node-id="qBXAaYIE28kc6piWqUIoED">变更</button>
+      <button type="button" data-filter="fixed"   aria-pressed="false" data-page-node-id="Z4Cddwsu20X9hzps3koICG">修复</button>
+      <button type="button" data-filter="deprecated" aria-pressed="false">废弃</button>
+      <button type="button" data-filter="removed"    aria-pressed="false">移除</button>
+      <button type="button" data-filter="security"   aria-pressed="false">安全</button>
+      <button type="button" data-filter="perf"       aria-pressed="false">性能</button>
+    </nav>
+  </header>
+
+  <main class="timeline" data-page-node-id="BiERhCC0vF0CkNrTecqhvZ">
+
+    <!-- ================= 2.1.26256.1603 ================= -->
+    <article class="release is-latest" id="2-1-26256-1603">
+      <div class="release-card">
+        <div class="release-head">
+          <h2 class="version"><a href="#2-1-26256-1603">2.1.26256.1603</a></h2>
+          <time class="date" datetime="2026-09-13">2026-09-13</time>
+          <span class="tag-latest">最新</span>
+        </div>
+
+        <section class="group" data-cat="fixed">
+          <h3 class="group-title">修复</h3>
+          <ul>
+            <li>编辑公共节点/动作弹窗默认焦点确认在「取消」按钮——使用 QTimer.singleShot(0) 延迟到对话框真正显示后设置焦点</li>
+          </ul>
+        </section>
+      </div>
+    </article>
+
+    <!-- ================= 2.1.26256.1545 ================= -->
+    <article class="release" id="2-1-26256-1545">
+      <div class="release-card">
+        <div class="release-head">
+          <h2 class="version"><a href="#2-1-26256-1545">2.1.26256.1545</a></h2>
+          <time class="date" datetime="2026-09-13">2026-09-13</time>
+          
+        </div>
+
+        <section class="group" data-cat="fixed">
+          <h3 class="group-title">修复</h3>
+          <ul>
+            <li>编辑公共节点/动作弹窗按钮 hover 边框改为淡蓝色（#93c5fd），默认焦点确认在「取消」按钮</li>
+          </ul>
+        </section>
+      </div>
+    </article>
+
+    <!-- ================= 2.1.26256.1540 ================= -->
+    <article class="release" id="2-1-26256-1540">
+      <div class="release-card">
+        <div class="release-head">
+          <h2 class="version"><a href="#2-1-26256-1540">2.1.26256.1540</a></h2>
+          <time class="date" datetime="2026-09-13">2026-09-13</time>
+          
+        </div>
+
+        <section class="group" data-cat="fixed">
+          <h3 class="group-title">修复</h3>
+          <ul>
+            <li>编辑公共节点/动作弹窗按钮 hover 时边框改为蓝色（#3b82f6），增强鼠标移入的视觉反馈</li>
+          </ul>
+        </section>
+      </div>
+    </article>
+
+    <!-- ================= 2.1.26256.1532 ================= -->
+    <article class="release" id="2-1-26256-1532">
+      <div class="release-card">
+        <div class="release-head">
+          <h2 class="version"><a href="#2-1-26256-1532">2.1.26256.1532</a></h2>
+          <time class="date" datetime="2026-09-13">2026-09-13</time>
+          
+        </div>
+
+        <section class="group" data-cat="fixed">
+          <h3 class="group-title">修复</h3>
+          <ul>
+            <li>编辑公共节点/动作弹窗改用左右布局——左侧橙色警告图标，右侧标题+说明+三按钮；窗口宽度缩小至 520×140；按钮 hover/pressed 效果增强（背景色变化 + 边框加深）</li>
+          </ul>
+        </section>
+      </div>
+    </article>
+
+    <!-- ================= 2.1.26256.1514 ================= -->
+    <article class="release" id="2-1-26256-1514">
+      <div class="release-card">
+        <div class="release-head">
+          <h2 class="version"><a href="#2-1-26256-1514">2.1.26256.1514</a></h2>
+          <time class="date" datetime="2026-09-13">2026-09-13</time>
+          
+        </div>
+
+        <section class="group" data-cat="fixed">
+          <h3 class="group-title">修复</h3>
+          <ul>
+            <li>编辑公共节点/动作弹窗改用左右布局：左侧橙色警告图标（48px），右侧标题+说明+三按钮；固定宽度 640×160；默认焦点在「取消」</li>
+          </ul>
+        </section>
+      </div>
+    </article>
+
+    <!-- ================= 2.1.26256.1501 ================= -->
+    <article class="release" id="2-1-26256-1501">
+      <div class="release-card">
+        <div class="release-head">
+          <h2 class="version"><a href="#2-1-26256-1501">2.1.26256.1501</a></h2>
+          <time class="date" datetime="2026-09-13">2026-09-13</time>
+          
+        </div>
+
+        <section class="group" data-cat="fixed">
+          <h3 class="group-title">修复</h3>
+          <ul>
+            <li>编辑公共节点/动作弹窗宽度固定为 640×180——QMessageBox.exec_() 内部 adjustSize() 会覆盖所有尺寸设置，改用自定义 QDialog 完全控制布局；默认焦点改为「取消」按钮</li>
+          </ul>
+        </section>
+      </div>
+    </article>
+
+    <!-- ================= 2.1.26256.1454 ================= -->
+    <article class="release" id="2-1-26256-1454">
+      <div class="release-card">
+        <div class="release-head">
+          <h2 class="version"><a href="#2-1-26256-1454">2.1.26256.1454</a></h2>
+          <time class="date" datetime="2026-09-13">2026-09-13</time>
+          
+        </div>
+
+        <section class="group" data-cat="fixed">
+          <h3 class="group-title">修复</h3>
+          <ul>
+            <li>编辑公共节点/动作弹窗宽度固定为 640×180——QMessageBox.exec_() 内部 adjustSize() 会覆盖所有尺寸设置，改用自定义 QDialog 完全控制布局</li>
+          </ul>
+        </section>
+      </div>
+    </article>
+
+    <!-- ================= 2.1.26256.1445 ================= -->
+    <article class="release" id="2-1-26256-1445">
+      <div class="release-card">
+        <div class="release-head">
+          <h2 class="version"><a href="#2-1-26256-1445">2.1.26256.1445</a></h2>
+          <time class="date" datetime="2026-09-13">2026-09-13</time>
+          
+        </div>
+
+        <section class="group" data-cat="fixed">
+          <h3 class="group-title">修复</h3>
+          <ul>
+            <li>编辑公共节点/动作弹窗宽度固定为 640×180——QMessageBox 内部布局会覆盖 setFixedSize，改用自定义 QDialog 替代</li>
+          </ul>
+        </section>
+      </div>
+    </article>
+
+    <!-- ================= 2.1.26256.1438 ================= -->
+    <article class="release" id="2-1-26256-1438">
+      <div class="release-card">
+        <div class="release-head">
+          <h2 class="version"><a href="#2-1-26256-1438">2.1.26256.1438</a></h2>
+          <time class="date" datetime="2026-09-13">2026-09-13</time>
+          
+        </div>
+
+        <section class="group" data-cat="fixed">
+          <h3 class="group-title">修复</h3>
+          <ul>
+            <li>编辑公共节点/动作弹窗宽度固定为 640×200——QMessageBox.exec_() 内 adjustSize() 会覆盖 setFixedSize，改用 QTimer.singleShot(0) 延迟到对话框真正显示后设置</li>
+          </ul>
+        </section>
+      </div>
+    </article>
+
+    <!-- ================= 2.1.26256.1412 ================= -->
+    <article class="release" id="2-1-26256-1412">
+      <div class="release-card">
+        <div class="release-head">
+          <h2 class="version"><a href="#2-1-26256-1412">2.1.26256.1412</a></h2>
+          <time class="date" datetime="2026-09-13">2026-09-13</time>
+          
+        </div>
+
+        <section class="group" data-cat="fixed">
+          <h3 class="group-title">修复</h3>
+          <ul>
+            <li>新建节点 / 方案后分类未自动归入「未分类」—— NodeStore.save() 与 PlanStore.save() 保存后立即注册到分类树（补调 set_item_category），后续拖放可正常调整</li>
+          </ul>
+        </section>
+
+        <section class="group" data-cat="added">
+          <h3 class="group-title">新增</h3>
+          <ul>
+            <li>节点管理、方案管理表格支持多选（Ctrl+点击 / Shift+点击）后拖放到分类树，批量调整分类</li>
+            <li>编辑公共节点/动作弹窗固定宽度 640×200（改用 setFixedSize，避免被 Qt 布局管理器覆盖）</li>
+          </ul>
+        </section>
+      </div>
+    </article>
+
+    <!-- ================= 2.1.26256.1324 ================= -->
+    <article class="release" id="2-1-26256-1324">
+      <div class="release-card">
+        <div class="release-head">
+          <h2 class="version"><a href="#2-1-26256-1324">2.1.26256.1324</a></h2>
+          <time class="date" datetime="2026-09-13">2026-09-13</time>
+          
+        </div>
+
+        <section class="group" data-cat="fixed">
+          <h3 class="group-title">修复</h3>
+          <ul>
+            <li>新建节点 / 方案后分类未自动归入「未分类」—— NodeStore.save() 与 PlanStore.save() 保存后立即注册到分类树（补调 set_item_category），后续拖放可正常调整</li>
+          </ul>
+        </section>
+
+        <section class="group" data-cat="added">
+          <h3 class="group-title">新增</h3>
+          <ul>
+            <li>节点管理、方案管理表格支持多选（Ctrl+点击 / Shift+点击）后拖放到分类树，批量调整分类</li>
+          </ul>
+        </section>
+      </div>
+    </article>
+
+    <!-- ================= 2.1.26256.1053 ================= -->
+    <article class="release" id="2-1-26256-1053">
+      <div class="release-card">
+        <div class="release-head">
+          <h2 class="version"><a href="#2-1-26256-1053">2.1.26256.1053</a></h2>
+          <time class="date" datetime="2026-09-13">2026-09-13</time>
+          
+        </div>
+
+        <section class="group" data-cat="fixed">
+          <h3 class="group-title">修复</h3>
+          <ul>
+            <li>「转为公共动作」按钮选中行错误——改用 selectionModel 获取真实选中行，避免操作第0行导致误报"已是公共模板"</li>
+          </ul>
+        </section>
+
+        <section class="group" data-cat="added">
+          <h3 class="group-title">新增</h3>
+          <ul>
+            <li>节点编辑窗口「转为公共节点」按钮（仅私有节点显示）——发布为公共模板并存入节点库</li>
+          </ul>
+        </section>
+
+        <section class="group" data-cat="fixed">
+          <h3 class="group-title">修复</h3>
+          <ul>
+            <li>节点重命名后步骤面板实时同步</li>
+            <li>「转为公共节点」后步骤面板节点正确更新为公共引用（🔗）</li>
+            <li>StepEditDialog 中编辑私有节点并发布为公共节点后能正确同步状态</li>
+          </ul>
+        </section>
+      </div>
+    </article>
+
+    <!-- ================= 2.1.26255.2216 ================= -->
+    <article class="release" id="2-1-26255-2216">
+      <div class="release-card">
+        <div class="release-head">
+          <h2 class="version"><a href="#2-1-26255-2216">2.1.26255.2216</a></h2>
+          <time class="date" datetime="2026-09-12">2026-09-12</time>
+        </div>
+
+        <section class="group" data-cat="changed">
+          <h3 class="group-title">变更</h3>
+          <ul>
+            <li>大版本升级 2.0 → 2.1</li>
+            <li>编辑公共动作时的三选一确认框窗口拉宽至 640px</li>
+          </ul>
+        </section>
+        
+        <section class="group" data-cat="added">
+          <h3 class="group-title">新增</h3>
+          <ul>
+            <li>动作 / 节点新增「公共模板」与「私有实例」两种形态：公共实例（🔗）关联
+                动作库 / 节点库中的模板，模板改动自动同步到所有引用处；私有实例（🔒）
+                内嵌于当前方案或节点，不入库、不进分类树，跟着方案一起走。</li>
+            <li>方案文件全面自包含：节点、动作及其全部参数都随方案文件一起内嵌保存，
+                单个方案文件即可直接分享给他人，接收方无需预先拥有相同的动作 / 节点库。</li>
+            <li>节点编辑器新增「来源」列，逐行标出动作是公共（🔗）还是私有（🔒）。</li>
+            <li>节点编辑器支持把动作「转为公共」：填写名称与分类后写入动作库并变为公共实例；
+                重名会提示改名，若不改名则拒绝入库（不做自动加后缀）。</li>
+            <li>分享方案的导入升级为智能匹配：命中本地同 ID 的模板则保持公共并刷新快照，
+                未命中的节点 / 动作自动降级为私有副本，导入后即可直接运行。</li>
+          </ul>
+        </section>
+
+        <section class="group" data-cat="changed">
+          <h3 class="group-title">变更</h3>
+          <ul>
+            <li>执行引擎改为「快照执行」：运行动作时直接使用方案 / 节点内已保存的参数副本，
+                不再回查动作库，因此方案即使脱离原动作库也能照常运行。</li>
+            <li>公共实例的改动沿引用链自动同步：保存或重命名动作 / 节点模板时，所有引用它的
+                节点与方案快照一并刷新；删除模板时引用处自动降级为私有副本，方案仍可运行。</li>
+            <li>编辑公共实例改为每次都弹出二次确认：可「修改模板（全局生效）」、
+                「仅改这一份（转为私有）」或取消（默认聚焦在取消上），避免误改影响其它方案。</li>
+            <li>新增动作 / 节点的入口默认创建私有实例，只有明确执行「转公共」才写入动作库 / 节点库。</li>
+            <li>数据格式升级为 v2（fmt:2）。旧数据在首次启动时自动迁移为公共引用，迁移前会完整备份到
+                <code>userdata/.backup/v2_&lt;时间戳&gt;/</code> 并写入 <code>v2_done</code> 标记；
+                旧格式文件在内存内自动归一，保存后即转为新格式，原有数据无需手动处理。</li>
+          </ul>
+        </section>
+      </div>
+    </article>
+
+    <!-- ================= 2.0.26255.1812 ================= -->
+    <article class="release" id="2-0-26255-1812">
+      <div class="release-card">
+        <div class="release-head">
+          <h2 class="version"><a href="#2-0-26255-1812">2.0.26255.1812</a></h2>
+          <time class="date" datetime="2026-09-12">2026-09-12</time>
+        </div>
+
+        <section class="group" data-cat="fixed">
+          <h3 class="group-title">修复</h3>
+          <ul>
+            <li>「OCR识别」匹配模式为"全部关键词"且命中时执行异常崩溃
+                （in &lt;string&gt; requires string as left operand, not list）：
+                全部模式返回的是命中关键词列表，坐标定位却按单个字符串处理；
+                同时修复该模式下未命中全部关键词时被误判为"已命中"的问题
+                （空列表被当成真值）。命中坐标定位现按关键词列表逐个匹配，
+                并兼容 re: 正则关键词。</li>
+          </ul>
+        </section>
+      </div>
+    </article>
+
+    <!-- ================= 2.0.26255.1329 ================= -->
+    <article class="release" id="2-0-26255-1329">
+      <div class="release-card">
+        <div class="release-head">
+          <h2 class="version"><a href="#2-0-26255-1329">2.0.26255.1329</a></h2>
+          <time class="date" datetime="2026-09-12">2026-09-12</time>
+        </div>
+
+        <section class="group" data-cat="changed">
+          <h3 class="group-title">变更</h3>
+          <ul>
+            <li>动作编辑器的类型下拉框按 8 组分类显示（鼠标 / 键盘 / 输入 /
+                OCR与图像 / 窗口 / 流程控制 / 数据 / 打开），组间插入置灰
+                分隔行，33 种动作一目了然；组内按使用频率排序。
+                弹出列表最多同时显示约 14 行（按屏幕可用高度 60%
+                兜底限高），超出部分滚动查看，高缩放 / 小屏不会超出屏幕。
+                仅调整下拉框显示顺序与分组，动作数据与已有动作不受影响。</li>
+          </ul>
+        </section>
+      </div>
+    </article>
+
+    <!-- ================= 2.0.26255.1147 ================= -->
+    <article class="release" id="2-0-26255-1147">
+      <div class="release-card">
+        <div class="release-head">
+          <h2 class="version"><a href="#2-0-26255-1147">2.0.26255.1147</a></h2>
+          <time class="date" datetime="2026-09-12">2026-09-12</time>
+        </div>
+
+        <section class="group" data-cat="added">
+          <h3 class="group-title">新增</h3>
+          <ul>
+            <li>「双击后输入」「双击后输入完Tab」两个动作：左键双击定位
+                （选中行 / 展开列表项等场景）后粘贴输入文本，Tab 版输入完成后
+                自动再按一次 Tab。复用文本 / 先清空 / 密码库字段，
+                动作类型增至 33 种。</li>
+          </ul>
+        </section>
+      </div>
+    </article>
+
+    <!-- ================= 2.0.26255.1135 ================= -->
+    <article class="release" id="2-0-26255-1135">
+      <div class="release-card">
+        <div class="release-head">
+          <h2 class="version"><a href="#2-0-26255-1135">2.0.26255.1135</a></h2>
+          <time class="date" datetime="2026-09-12">2026-09-12</time>
+        </div>
+
+        <section class="group" data-cat="added">
+          <h3 class="group-title">新增</h3>
+          <ul>
+            <li>「滚轮滚动」：移动到坐标后滚动滚轮 N 格（方向 up/down），
+                补上网页 / 列表翻页能力空白。</li>
+            <li>「复制选区到变量」：可选先点击聚焦，Ctrl+C 复制当前选区内容，
+                读剪贴板存入 {变量}，与模板/设置变量配合做数据抓取。</li>
+            <li>「激活窗口」：按标题关键词（逗号分隔多个）找到窗口并带到前台，
+                未找到可走未命中跳转；解决流程跑错窗口的问题。</li>
+            <li>「等待窗口」：轮询等待标题含关键词的窗口出现，出现即激活，
+                超时可走未命中跳转。</li>
+            <li>「找图点击」：cv2 模板匹配（阈值 0.8，区域为 0 时全屏搜索），
+                命中后点击中心+偏移；补 OCR 盲区——无文字的图标、按钮。</li>
+            <li>「等待图片」：轮询找图直到出现或超时，支持命中/未命中跳转。</li>
+            <li>「OCR偏移双击」：识别关键词位置后按偏移双击（如选中一行文本）。</li>
+            <li>「随机延迟」：在基准时长 50%~150% 之间随机等待，
+                比固定等待更自然，也缓解固定节奏的时序问题。</li>
+            <li>「写文件」：把文本（支持 {变量} 模板）追加到文件末尾，
+                自动加时间戳前缀，可记录每轮处理轨迹。</li>
+          </ul>
+        </section>
+
+        <section class="group" data-cat="changed">
+          <h3 class="group-title">变更</h3>
+          <ul>
+            <li>动作类型增至 31 种；动作编辑对话框各行标签按类型自动切换
+                （如滚轮滚动的"方向(up/down)/滚动格数"、找图点击的"模板图片"）。</li>
+          </ul>
+        </section>
+      </div>
+    </article>
+
+    <!-- ================= 2.0.26255.1054 ================= -->
+    <article class="release" id="2-0-26255-1054">
+      <div class="release-card">
+        <div class="release-head">
+          <h2 class="version"><a href="#2-0-26255-1054">2.0.26255.1054</a></h2>
+          <time class="date" datetime="2026-09-12">2026-09-12</time>
+        </div>
+
+        <section class="group" data-cat="added">
+          <h3 class="group-title">新增</h3>
+          <ul>
+            <li>「单击后输入」动作：左键单击坐标获得焦点后粘贴输入文本，
+                复用输入文本动作的字段（文本/先清空/密码库/{变量} 模板）。</li>
+            <li>「单击后输入完Tab」动作：同「单击后输入」，输入完成后自动
+                再按一次 Tab，用于输入后跳转下一输入框的场景。</li>
+          </ul>
+        </section>
+      </div>
+    </article>
+
+    <!-- ================= 2.0.26255.1040 ================= -->
+    <article class="release" id="2-0-26255-1040">
+      <div class="release-card">
+        <div class="release-head">
+          <h2 class="version"><a href="#2-0-26255-1040">2.0.26255.1040</a></h2>
+          <time class="date" datetime="2026-09-12">2026-09-12</time>
+        </div>
+
+        <section class="group" data-cat="fixed">
+          <h3 class="group-title">修复</h3>
+          <ul>
+            <li>「OCR偏移点击」「OCR偏移点击输入」点击坐标整体偏移一个识别区域
+                原点：OCR 返回的文本框坐标是相对区域截图左上角的局部坐标，
+                点击时未加回识别区域原点，导致最终点击位置 =
+                正确位置 −（区域左、区域上）。现在命中坐标统一换算为屏幕绝对
+                坐标后再叠加偏移（如内容在 (100,200)、偏移 (50,40) →
+                点击 (150,240)，与区域原点无关）。</li>
+          </ul>
+        </section>
+      </div>
+    </article>
+
+    <!-- ================= 2.0.26255.0723 ================= -->
+    <article class="release" id="2-0-26255-0723">
+      <div class="release-card">
+        <div class="release-head">
+          <h2 class="version"><a href="#2-0-26255-0723">2.0.26255.0723</a></h2>
+          <time class="date" datetime="2026-09-12">2026-09-12</time>
+        </div>
+
+        <section class="group" data-cat="fixed">
+          <h3 class="group-title">修复</h3>
+          <ul>
+            <li>启动后任务栏"沉下去、失去半透明（像带阴影）"：实时可视化覆盖层
+                （无边框+置顶+全透明的鼠标/键盘效果层）自启动起常驻显示，
+                且几何覆盖整个显示器（含任务栏区域）。Windows 检测到"覆盖整屏的
+                置顶窗口"即进入全屏应用状态——即使窗口 100% 透明也会触发——
+                任务栏被降级并关闭半透明合成。现在覆盖层改为按需显示：
+                任一效果功能（鼠标高亮/点击效果/键盘显示/聚光灯/放大镜/鼠标坐标）
+                开启时显示，全部关闭时隐藏；键盘显示为瞬态绘制，按键时出现、
+                超时后隐藏。</li>
+          </ul>
+        </section>
+      </div>
+    </article>
+
+    <!-- ================= 2.0.26255.0603 ================= -->
+    <article class="release" id="2-0-26255-0603">
+      <div class="release-card">
+        <div class="release-head">
+          <h2 class="version"><a href="#2-0-26255-0603">2.0.26255.0603</a></h2>
+          <time class="date" datetime="2026-09-12">2026-09-12</time>
+        </div>
+
+        <section class="group" data-cat="added">
+          <h3 class="group-title">新增</h3>
+          <ul>
+            <li>「请喝杯咖啡」对话框收款码下方显示收款方名称
+                （<code>收款方：xxx</code>），名称内嵌在程序里、随 EXE 分发；
+                更换收款码图片后截图不再包含收款方信息，由界面文字补齐。</li>
+          </ul>
+        </section>
+        <section class="group" data-cat="changed">
+          <h3 class="group-title">变更</h3>
+          <ul>
+            <li>更新内嵌支付宝 / 微信收款码图片；收款方名称集中在
+                <code>dev/qr/embed_qr.py</code> 顶部 <code>PAYEE</code> 配置区维护，
+                重新生成脚本时自动烙入 <code>rpa/qr_assets.py</code>，留空则界面不显示该行。</li>
+          </ul>
+        </section>
+      </div>
+    </article>
+
+    <!-- ================= 2.0.26255.0543 ================= -->
+    <article class="release" id="2-0-26255-0543">
+      <div class="release-card">
+        <div class="release-head">
+          <h2 class="version"><a href="#2-0-26255-0543">2.0.26255.0543</a></h2>
+          <time class="date" datetime="2026-09-12">2026-09-12</time>
+        </div>
+
+        <section class="group" data-cat="fixed">
+          <h3 class="group-title">修复</h3>
+          <ul>
+            <li>分隔条布局自激死循环：拖动分隔条（或改变窗口宽度）后，布局校正在
+                <code>splitterMoved</code> 处理器里无条件 <code>setSizes</code>，
+                Qt 重分配的微小抖动会再次触发信号，形成每 15ms 一圈的死循环——
+                持续占用 CPU、反复写窗口状态文件，且拖动被反复顶回
+                （表现为方案面板拖不窄、面板绘制相互压盖）。现在加再入保护、
+                尺寸无变化不写回，并在窗口窄于内容所需宽度时优先拉宽窗口。</li>
+          </ul>
+        </section>
+      </div>
+    </article>
+
+    <!-- ================= 2.0.26255.0530 ================= -->
+    <article class="release" id="2-0-26255-0530">
+      <div class="release-card">
+        <div class="release-head">
+          <h2 class="version"><a href="#2-0-26255-0530">2.0.26255.0530</a></h2>
+          <time class="date" datetime="2026-09-12">2026-09-12</time>
+        </div>
+
+        <section class="group" data-cat="fixed">
+          <h3 class="group-title">修复</h3>
+          <ul>
+            <li>新增 / 复制方案、节点、动作时，<code>data.json</code> 顺序表未立即登记
+                （要等一次「上移/下移」整体重写才出现）。现在保存即登记，
+                覆盖保存与改名不重复、不破坏已有顺序。</li>
+          </ul>
+        </section>
+      </div>
+    </article>
+
+    <!-- ================= 2.0.26255.0504 ================= -->
+    <article class="release" id="2-0-26255-0504">
+      <div class="release-card">
+        <div class="release-head">
+          <h2 class="version"><a href="#2-0-26255-0504">2.0.26255.0504</a></h2>
+          <time class="date" datetime="2026-09-12">2026-09-12</time>
+        </div>
+
+        <section class="group" data-cat="fixed">
+          <h3 class="group-title">修复</h3>
+          <ul>
+            <li>节点管理重命名误报「名称已存在」并中断：重命名时误按新建做重名检查，导致界面残留旧名、
+                节点文件内容 <code>name</code>/<code>category</code> 未更新（新节点掉到「未分类」）。
+                现已修复，并同步保留原分类、对齐文件内容 <code>name</code> 字段，改名后立即刷新显示。</li>
+            <li>重命名方案 / 节点、动作编辑器改名时，文件内容 <code>name</code> 与新文件名对齐；
+                动作改名后 <code>data.json</code> 顺序表同步原位换名。</li>
+          </ul>
+        </section>
+      </div>
+    </article>
+
+    <!-- ================= 2.0.26255.0428 ================= -->
+    <article class="release" id="2-0-26255-0428">
+      <div class="release-card">
+        <div class="release-head">
+          <h2 class="version"><a href="#2-0-26255-0428">2.0.26255.0428</a></h2>
+          <time class="date" datetime="2026-09-12">2026-09-12</time>
+        </div>
+
+        <section class="group" data-cat="fixed">
+          <h3 class="group-title">修复</h3>
+          <ul>
+            <li>删除 / 重命名方案、节点时未同步 <code>.categories.json</code>：分类树残留已删除的旧名称、
+                重命名后的新名称不出现在原分类（方案面板删除/导入、节点面板删除/重命名等入口）。
+                现已把分类树同步下沉到存储层，全部入口自动覆盖；启动前残留的旧条目会自动清理。</li>
+          </ul>
+        </section>
+      </div>
+    </article>
+
+    <!-- ================= 2.0.26255.0334 ================= -->
+    <article class="release" id="2-0-26255-0334">
+      <div class="release-card">
+        <div class="release-head">
+          <h2 class="version"><a href="#2-0-26255-0334">2.0.26255.0334</a></h2>
+          <time class="date" datetime="2026-09-12">2026-09-12</time>
+        </div>
+
+        <section class="group" data-cat="fixed">
+          <h3 class="group-title">修复</h3>
+          <ul>
+            <li>方案 / 节点库面板的「上移 / 下移」顺序保存后刷新即回退：顺序写入 <code>data.json</code>
+                但面板刷新读取的还是旧位置（<code>config.json</code>），读写不同源导致移动看起来没生效。
+                现在读写统一走 <code>data.json</code>。</li>
+            <li>动作 / 节点 / 方案管理对话框中，选中某个分类后「上移 / 下移」时好时坏：
+                交换对象取自全量列表，可能是其它分类的项（表格里看不见），显示顺序不变。
+                现在移动只在当前分类的可见子序列内进行。</li>
+            <li>节点库面板新建 / 复制 / 导入的节点未登记进分类树（<code>nodes/.categories.json</code>），
+                「未分类」视图看不到这些节点。现在创建时自动登记（复制 / 导入跟随来源分类）。</li>
+          </ul>
+        </section>
+      </div>
+    </article>
+
+    <!-- ================= 2.0.26255.0300 ================= -->
+    <article class="release" id="2-0-26255-0300">
+      <div class="release-card">
+        <div class="release-head">
+          <h2 class="version"><a href="#2-0-26255-0300">2.0.26255.0300</a></h2>
+          <time class="date" datetime="2026-09-12">2026-09-12</time>
+        </div>
+
+        <section class="group" data-cat="fixed">
+          <h3 class="group-title">修复</h3>
+          <ul>
+            <li>删除节点 / 删除方案后未同步更新 <code>data.json</code>：顺序列表（<code>node_order</code> /
+                <code>plan_order</code>）中会残留已删除的名称，默认方案被删后残留指向失效。现在删除时同步清理，
+                动作删除同样覆盖。</li>
+            <li>重命名方案 / 节点时 <code>data.json</code> 顺序列表原位换名，自定义排序不再丢失；
+                重命名默认方案时 <code>default_plan</code> 跟随新名，不再指向失效名称。</li>
+          </ul>
+        </section>
+      </div>
+    </article>
+
+    <!-- ================= 2.0.26255.0145 ================= -->
+    <article class="release" id="2-0-26255-0145">
+      <div class="release-card">
+        <div class="release-head">
+          <h2 class="version"><a href="#2-0-26255-0145">2.0.26255.0145</a></h2>
+          <time class="date" datetime="2026-09-11">2026-09-11</time>
+        </div>
+
+        <section class="group" data-cat="changed">
+          <h3 class="group-title">变更</h3>
+          <ul>
+            <li>主窗口标题栏只显示大版本号（如 <code>v2.0</code>），不再显示随构建变动的完整版本号；
+                完整版本号仍可在「关于」对话框中查看。</li>
+            <li><code>config.json</code> 的 <code>layout</code> 段只保留三项真设置（自动隐藏面板、紧凑布局、允许布局操作）。
+                面板折叠状态不再写入：开启"自动隐藏面板"时它由窗口宽度实时推算，关闭时同样保存在
+                <code>config/window_state.ini</code>，不再在入库的 <code>config.json</code> 里留一份会自己变的副本。</li>
+            <li>配置内容没有变化时不再重写 <code>config.json</code>。此前窗口尺寸一变（含自动折叠触发）都会重写整个文件，
+                现在只有你真正切换了上述开关才会写入。</li>
+            <li>旧配置里残留的 <code>layout.plan_collapsed</code> / <code>layout.node_collapsed</code> 会在启动时自动清理，
+                避免旧值反向覆盖 <code>window_state.ini</code> 中的最新折叠状态。</li>
+          </ul>
+        </section>
+      </div>
+    </article>
+
+    <!-- ================= 2.0.26254.1652 ================= -->
+    <article class="release" id="v2-0-26254-1652">
+      <div class="release-card">
+        <div class="release-head">
+          <h2 class="version"><a href="#v2-0-26254-1652">2.0.26254.1652</a></h2>
+          <time class="date" datetime="2026-09-11">2026-09-11</time>
+        </div>
+
+        <section class="group" data-cat="added">
+          <h3 class="group-title">新增</h3>
+          <ul>
+            <li>首次使用即生成完整的 <code>config/config.json</code>：程序启动时若配置不存在（首启、被删除或损坏）会自动生成，
+                包含全部配置项与默认值；已存在的配置只补齐缺失键，不覆盖用户已有设置。打包时生成的种子配置同样包含完整配置项。</li>
+            <li>列宽按内容自适应生成：动作管理、节点管理、方案管理、方案步骤列表、节点编辑器的各列，
+                首次使用时按「字段名宽度与单元格内容宽度谁大取谁」计算默认宽度，并左右各留 6px 内边距，
+                使名称、路径等文本默认就能完整显示；默认值在首次使用时写入 <code>config.json</code>（<code>*_col_widths</code>）。</li>
+            <li>列宽区分「自动 / 手动」两种状态：默认自动（每次刷新按内容重算，文本永不截断）；
+                拖动表头或改列宽后自动切为手动，此后完全以你调好的宽度为准
+                （状态见 <code>config.json</code> 的 <code>*_col_widths_manual</code>，改回 <code>false</code> 即恢复自动）。</li>
+          </ul>
+        </section>
+
+        <section class="group" data-cat="changed">
+          <h3 class="group-title">变更</h3>
+          <ul>
+            <li>表格列宽/列可见性改由统一模块（<code>rpa/ui/colwidths.py</code>）管理，五处表格行为一致；
+                同时修正隐藏列宽度被记为 0、取消隐藏后列看不见的问题，并放宽列宽上限
+                （列设置对话框 400→600px、动作与节点表格单列上限 300→600px）。</li>
+            <li>运行时状态不再往 <code>config.json</code> 里回写，配置只保存你真正改过的设置：
+                列宽在自动模式下只在首次使用时写入一次（之后每次打开都按内容重算，显示效果不受影响）；
+                窗口大小与分隔条位置统一由 <code>config/window_state.ini</code> 保存，不再在
+                <code>config.json</code> 的 <code>layout</code> 段里留一份随窗口拖动就变的副本。</li>
+          </ul>
+        </section>
+
+        <section class="group" data-cat="removed">
+          <h3 class="group-title">移除</h3>
+          <ul>
+            <li>删除 <code>rpa/ui/action_manager.py</code> 中已无任何调用点的旧版动作管理对话框。
+                程序实际使用的是 <code>rpa/ui/main_window.py</code> 里的 <code>ActionMgrDialog</code>；
+                旧对话框仍按淘汰的规则写入 <code>action_col_widths</code>，删除后列宽体系只剩一套实现。
+                该文件现仅保留 <code>ActionManager</code> 的再导出，历史导入方式不受影响。</li>
+          </ul>
+        </section>
+      </div>
+    </article>
+
+    <article class="release" id="v2-0-26254-1540">
+      <div class="release-card">
+        <div class="release-head">
+          <h2 class="version"><a href="#v2-0-26254-1540">2.0.26254.1540</a></h2>
+          <time class="date" datetime="2026-09-11">2026-09-11</time>
+        </div>
+
+        <section class="group" data-cat="fixed">
+          <h3 class="group-title">修复</h3>
+          <ul>
+            <li>修复"方案管理"对话框中方案名称显示不全的问题：名称列宽度不足时按内容自动撑开
+                （只加宽、不缩窄，超长封顶），且所有单元格支持鼠标悬停查看完整文本。</li>
+            <li>修复"方案步骤"面板中节点名称显示不全的问题：节点列同样按内容自动撑开，
+                并解除单列 300px 的宽度上限（放宽到 600px），悬停可看全文。</li>
+          </ul>
+        </section>
+      </div>
+    </article>
+
+    <article class="release" id="v2-0-26254-1531">
+      <div class="release-card">
+        <div class="release-head">
+          <h2 class="version"><a href="#v2-0-26254-1531">2.0.26254.1531</a></h2>
+          <time class="date" datetime="2026-09-11">2026-09-11</time>
+        </div>
+
+        <section class="group" data-cat="fixed">
+          <h3 class="group-title">修复</h3>
+          <ul>
+            <li>修复配置被删/自动重建后布局被锁死的问题：左侧分隔条无法把"方案面板"拉到最小宽度
+                （打包版尤其明显）。根因是默认配置不含 <code>layout</code> 段，打包版兜底为"极简模式"
+                （只能折叠不能展开、缩放跳过布局调整、启动自动收窄窗口），而源码版兜底为"自定义模式"，
+                造成两版行为不一致。</li>
+            <li>默认配置补齐 <code>layout</code> 段（<code>allow_layout_operations=true</code>、<code>auto_collapse=true</code> 等），
+                并把缺失时的兜底统一为"自定义模式"——即使配置被删后重建，源码版与打包版行为一致，
+                首次运行即可自由拖动分隔条；"极简模式"仍可在菜单中随时切换。</li>
+          </ul>
+        </section>
+      </div>
+    </article>
+
+    <!-- ================= 2.0.26254.1229 ================= -->
+    <article class="release" id="v2-0-26254-1229" data-page-node-id="icQkAltxZM5fIcuNknA4Om">
+      <div class="release-card" data-page-node-id="EZ8r71706vG4Z6LB3nCc9l">
+        <div class="release-head" data-page-node-id="ve2B0Gn36i7cpyazDL8z8M">
+          <h2 class="version" data-page-node-id="KBfMsYM1FtTnnaoU8sHiTb"><a href="#v2-0-26254-1229" data-page-node-id="RePIBf6Hf9SbHUfQinwNz7">2.0.26254.1229</a></h2>
+          <time class="date" datetime="2026-09-11" data-page-node-id="7PiCZrmc06Jcu0OChPhjHE">2026-09-11</time>
+        </div>
+
+        <section class="group" data-cat="added" data-page-node-id="IgAsoDqKqToDAS2JJsKyah">
+          <h3 class="group-title" data-page-node-id="MzJDKil6dHTrIxGU1HXWmE">新增</h3>
+          <ul data-page-node-id="9Xg2VOBXGuqhJf7JfqNs3b">
+            <li data-page-node-id="vo8kyQhv6Lil0SvKtorPgD">一键双发布包：新增 <code data-page-node-id="AODOpVe1tZJ7uENemM0Fw9">Releases\build_release.bat</code>，双击一次同时产出
+                安装版 <code data-page-node-id="gZqK1liOSZFGZOvcxUv9JD">KeyMouseMate_installer_v&lt;版本&gt;.exe</code> 与便携版
+                <code data-page-node-id="6epRA3Ks77bn6e9wZWeRpp">KeyMouseMate_portable_v&lt;版本&gt;.zip</code>（zip 内含顶层
+                <code data-page-node-id="J3BZIV2zGE16u8kVFRxyZt">KeyMouseMate\</code> 目录，解压不会散架）。</li>
+            <li data-page-node-id="kTQRGQBkyyyDXKDbYzygQb">版本号全链一致：打包时自动把版本号烙进 EXE 同级 <code data-page-node-id="Wk76v5Ti5cZvPpAFXKR2yJ">VERSION</code> 文件，
+                程序标题显示、安装包命名、便携包命名三者永远同源。</li>
+            <li data-page-node-id="PGbzKseAfBmAF6nB6msQ7J">ISCC 多路径自动查找：环境变量 → 本机配置 <code data-page-node-id="dhWJplZCYd4CfUJ2AljmdE">iscc_dirs.txt</code> →
+                Program Files → 注册表 → PATH，绿色版 / 自定义路径的 Inno Setup 也能被找到。</li>
+          </ul>
+        </section>
+
+        <section class="group" data-cat="fixed" data-page-node-id="B4fKTk17I8Oz0F2PJ7Vo4B">
+          <h3 class="group-title" data-page-node-id="Hub176iYfyo00ufHLjxhMz">修复</h3>
+          <ul data-page-node-id="UuEfDs4UVb90gkAanMXdEQ">
+            <li data-page-node-id="NuxdpwCuC6SxsKuhk5boCK">修复程序标题显示的版本号与发布包命名不一致的问题
+                （如 EXE 显示 <code data-page-node-id="K7p188jRYw81MIEAjS8kvL">v2.0.26254.1146</code> 而包名却是 <code data-page-node-id="0b9FMvn3Nm1n9NjDceqAwW">1131</code>）。</li>
+            <li data-page-node-id="n2IuB5XirRgJiIDw1YgDPu">修复 <code data-page-node-id="ocPjdXeJl8yJZdbZwGkh7k">build_release.bat</code> 在部分情况下启动即闪退的问题。</li>
+          </ul>
+        </section>
+      </div>
+    </article>
+
+    <!-- ================= 2.0.26254.1131 ================= -->
+    <article class="release" id="v2-0-26254-1131" data-page-node-id="8C7Hfn3q1QvrUK16an8PHi">
+      <div class="release-card" data-page-node-id="5IMpFWFgVOsrq2ouE16gpL">
+        <div class="release-head" data-page-node-id="dRuDFyDAom0W8sJx7stXJV">
+          <h2 class="version" data-page-node-id="K8defL1lSngYEAQlYzKcqE"><a href="#v2-0-26254-1131" data-page-node-id="ylfFlB9yi009Zp3zmtNHmR">2.0.26254.1131</a></h2>
+          <time class="date" datetime="2026-09-11" data-page-node-id="GaZUmwA4WD6wQgBID5Oh7k">2026-09-11</time>
+        </div>
+
+        <section class="group" data-cat="added" data-page-node-id="rpVDDzAfR6ImX1GoXv3QXA">
+          <h3 class="group-title" data-page-node-id="Q9eHw9A1elj07JqAugEsRS">新增</h3>
+          <ul data-page-node-id="IyYDg6KIQq0Gl2JU8NgbYm">
+            <li data-page-node-id="iB7JTAZRHHyCIDdWiQy3fU">鼠标高亮支持自定义高亮颜色。</li>
+            <li data-page-node-id="B7zgrD440cCk1dOak51ojx">浮动工具栏图标防丢自愈：<code data-page-node-id="3cxGzb1m3fazEXsQn4CQpM">config/floatbar</code> 中的图标被误删时，
+                自动从程序内置的出厂备份还原（只补缺失，不覆盖自定义图标）。</li>
+            <li data-page-node-id="EDYEjczmI5Qg0pWuHmWjrP">版本号体系：格式 <code data-page-node-id="zRwVAwvgvbCPkYyvwuWExy">2.0.&lt;年&gt;&lt;年内天&gt;.&lt;时分&gt;</code>，
+                取 <code data-page-node-id="xHsIjRPxyG6TBIM6dzVYXB">rpa/</code> 源码最新修改时间生成，唯一维护点 <code data-page-node-id="C6ozcRFKLKLmSVwPP1qUHq">rpa/version.py</code>；
+                根目录 <code data-page-node-id="0rYFeYaG1WUJtJOazRWLKz">VERSION</code> 文件记录当前实际版本。</li>
+            <li data-page-node-id="uSidbNm0UY7jAlLfjUaHFt">一键上传 GitHub：双击 <code data-page-node-id="8TyQvQU3PSheT4buCgT5SX">upload_to_github.bat</code> 完成源码仓库提交推送
+                与发布主页同步（配置驱动，他人克隆后亦可直接使用）。</li>
+          </ul>
+        </section>
+
+        <section class="group" data-cat="changed" data-page-node-id="loevUEP9ffwpaaN1kDCeCg">
+          <h3 class="group-title" data-page-node-id="8HgxZdeSnDjBEJIGG239Um">变更</h3>
+          <ul data-page-node-id="WoFUBaJNZIPiHs1Gp32leR">
+            <li data-page-node-id="sIFW8JPrJvPQeHbDwT43NJ">窗口 / 布局状态改存 <code data-page-node-id="n8oNcJIBw1nPwd0KeZW7Fe">config/window_state.ini</code>，
+                程序运行不再写注册表（旧注册表数据首次启动自动迁移）。</li>
+            <li data-page-node-id="CjNeq1QGPzzqfpNcvtqAuH">README 运行方式整理为安装版 / 便携版 / 源码运行三种，并补齐 <code data-page-node-id="8HjSt2Ud3FXht9NniL96gf">git clone</code> 步骤。</li>
+          </ul>
+        </section>
+
+        <section class="group" data-cat="fixed" data-page-node-id="Evyrs9ZPCmiMv0S1ZgFFVc">
+          <h3 class="group-title" data-page-node-id="DvHjlVZjUJtJwh99zqv0Fh">修复</h3>
+          <ul data-page-node-id="oWWrjMoqYIVFsqBkuxj9ys">
+            <li data-page-node-id="I7ksAWc0PN3mckVVnEIloQ">修复紧凑布局下展开方案 / 节点面板后最小化到任务栏再还原，两面板被意外自动隐藏的问题。</li>
+            <li data-page-node-id="NPLdZB7os4A7YuSA40bLg4">修复可视化设置「选择颜色」对话框不带入当前颜色（始终从白色开始）的问题；
+                「拾取屏幕颜色」「确定」「取消」按钮已汉化。</li>
+            <li data-page-node-id="NnuMVDjlMOBoBvXUt3rbyr">修复浮动工具栏图标颜色修改后不保存的问题（配置读写路径错位），
+                并自动清理配置文件中的重复键。</li>
+          </ul>
+        </section>
+      </div>
+    </article>
+
+    <!-- ================= 2.0 融合版 ================= -->
+    <article class="release" id="v2-0-merge" data-page-node-id="CcuTJE0oHJZXoiCCMfK2T7">
+      <div class="release-card" data-page-node-id="8eGGvk0K60t5FgiHA2nort">
+        <div class="release-head" data-page-node-id="gb7ukD6Yw6MBhMzUvPxp1A">
+          <h2 class="version" data-page-node-id="HidGwdy36U8DTEqObFjwNk"><a href="#v2-0-merge" data-page-node-id="uEyaVyzCCdnvggdSkb8Cby">2.0（可视化融合版）</a></h2>
+          <time class="date" datetime="2026-09-10" data-page-node-id="Jo9kW8TEviReIvxshYT5x2">2026-09-10</time>
+          <span class="tag-breaking" data-page-node-id="L3d6A0HGhCFhgbPhA6WsAD">融合重构</span>
+        </div>
+
+        <section class="group" data-cat="added" data-page-node-id="OyBlAIGZ80jFDjD4cSxpIr">
+          <h3 class="group-title" data-page-node-id="q4m47CeBrU9aNNatScm7Q3">新增</h3>
+          <ul data-page-node-id="KzD2DIcIn0v0UVlVTCfdhI">
+            <li data-page-node-id="kpNFGpgHZzyDDUowCWvygS">可视化助手整体并入主程序：鼠标高亮追踪、点击特效、键盘按键显示、
+                鼠标坐标、聚光灯、放大镜六大实时效果。</li>
+            <li data-page-node-id="LhK73mko3NWMmUmyeS5E3Q">可定制的浮动工具栏（SVG 图标位于 <code data-page-node-id="TRpsVPWBDGin5blhZrfERU">config/floatbar</code>，可自行替换）；
+                托盘与菜单新增「可视化」开关组，10 项可视化热键可自定义。</li>
+            <li data-page-node-id="8ymwGiJN47IAQmajyJ8N2P">GitHub 发布主页
+                <a href="https://softhubcc.github.io/KeyMouseMatePage/" data-page-node-id="j73vICo3dgwRjSqOILoaMS">softhubcc.github.io/KeyMouseMatePage</a>
+                与安装版 / 便携版发布物。</li>
+          </ul>
+        </section>
+
+        <section class="group" data-cat="changed" data-page-node-id="uHVojjIqyoKEe8H3ekngpf">
+          <h3 class="group-title" data-page-node-id="EuE96cIIFM9uBnTOOYIRbA">变更</h3>
+          <ul data-page-node-id="kXF5BSGryZZmNZpYHXQDwG">
+            <li data-page-node-id="uwSdws7VwTY6F6HMfyDiFn"><strong data-page-node-id="FgCBD48JpEsVnB63ISzsH5">目录布局重构：</strong>程序设置统一到 <code data-page-node-id="issgHK6ZRojiQMoXPiqeYM">config/</code>，
+                使用数据统一到 <code data-page-node-id="k9HW8IQjBbTJ4VzZ8FCqej">userdata/</code>（方案 / 节点 / 动作 / 日志 / 密码库），
+                旧版数据首次启动自动迁移，无需手工处理。</li>
+            <li data-page-node-id="eOyxNbpBuqb5TTmpM3JyEw">热键设置改为直接输入：自动归一化修饰键、检测重复绑定、支持一键恢复默认。</li>
+          </ul>
+        </section>
+
+        <section class="group" data-cat="fixed" data-page-node-id="rAxn5ClFewb7sRcph1ujsZ">
+          <h3 class="group-title" data-page-node-id="pS3itGyp7EcsmSPNq5wxXI">修复</h3>
+          <ul data-page-node-id="pEeYtOPGWZCo3Vh3Ecs3Cs">
+            <li data-page-node-id="IbfUXHUc2EVp5SnlpAw1AE">修复启动时「启用浮动工具栏」菜单勾选状态不同步的问题。</li>
+            <li data-page-node-id="ccTvyzdfDlXJtcNkf86V5E">修复打包后浮动工具栏图标不显示的问题。</li>
+          </ul>
+        </section>
+      </div>
+    </article>
+
+  </main>
+
+  <footer class="page-footer" data-page-node-id="9JoBFMH4CyVIsRTy7HDGlR">
+    <p data-page-node-id="XznUC7kStJvP3juMTjQOt9">更早的历史变更可查阅项目仓库的提交记录；相关文档见
+      <a href="用户手册.html" data-page-node-id="LDiC7OzpghlUDZPhWmXacN">用户手册</a>。</p>
+  </footer>
+
+</div>
+
+<script>
+(function () {
+  var buttons  = Array.prototype.slice.call(document.querySelectorAll('.filters button'));
+  var releases = Array.prototype.slice.call(document.querySelectorAll('.release'));
+
+  function apply(cat) {
+    releases.forEach(function (release) {
+      var groups  = Array.prototype.slice.call(release.querySelectorAll('.group'));
+      var visible = false;
+
+      groups.forEach(function (group) {
+        var match = (cat === 'all') || (group.dataset.cat === cat);
+        group.hidden = !match;
+        if (match) visible = true;
+      });
+
+      release.hidden = !visible; // 该版本下没有任何匹配项，整块隐藏
+    });
+  }
+
+  buttons.forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      var isActive = btn.getAttribute('aria-pressed') === 'true';
+      // 再次点击当前筛选 = 取消筛选，回到全部
+      var next = isActive ? 'all' : btn.dataset.filter;
+
+      buttons.forEach(function (b) {
+        b.setAttribute('aria-pressed', String(b.dataset.filter === next));
+      });
+
+      apply(next);
+    });
+  });
+})();
+</script>
+
+</body>
+</html>

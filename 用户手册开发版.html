@@ -1,0 +1,791 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-page-node-id="C8HOHCpmCJFGZHcCnRDPv2">
+<head data-page-node-id="IFLH2EGuKwSZZUKZtLYuzc">
+<meta charset="UTF-8" data-page-node-id="6T1uorphAWTQxanoxfJXMG">
+<meta name="viewport" content="width=device-width, initial-scale=1.0" data-page-node-id="0Aa3mapKvyYswTG90aAkeq">
+<title>键鼠自动化助手 — 用户手册（开发版）</title>
+<style>
+  :root {
+    --primary: #1a73e8;
+    --primary-dark: #0d47a1;
+    --accent: #34a853;
+    --bg: #f5f7fa;
+    --card-bg: #ffffff;
+    --text: #202124;
+    --text-light: #5f6368;
+    --border: #dadce0;
+    --sidebar-w: 260px;
+    --radius: 8px;
+    --shadow: 0 1px 6px rgba(0,0,0,.08);
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; scroll-padding-top: 70px; }
+  body { font-family: 'Microsoft YaHei','PingFang SC','Helvetica Neue',sans-serif; color: var(--text); background: var(--bg); line-height: 1.8; }
+  nav { position: sticky; top: 0; z-index: 200; background: #fff; border-bottom: 1px solid var(--border); box-shadow: 0 1px 4px rgba(0,0,0,.06); height: 56px; display: flex; align-items: center; padding: 0 24px; }
+  .nav-brand { font-size: 16px; font-weight: 700; color: var(--primary); letter-spacing: .5px; }
+  .nav-badge { margin-left: 12px; background: #e8f0fe; color: var(--primary); font-size: 11px; padding: 2px 8px; border-radius: 10px; font-weight: 600; }
+  .nav-link { margin-left: auto; color: var(--text-light); text-decoration: none; font-size: 13px; }
+  .nav-link:hover { color: var(--primary); }
+  .layout { display: flex; max-width: 1200px; margin: 0 auto; min-height: calc(100vh - 56px); }
+  .sidebar { width: var(--sidebar-w); flex-shrink: 0; position: sticky; top: 56px; height: calc(100vh - 56px); overflow-y: auto; padding: 16px 0; border-right: 1px solid var(--border); background: #fff; }
+  .sidebar::-webkit-scrollbar { width: 4px; }
+  .sidebar::-webkit-scrollbar-thumb { background: #dadce0; border-radius: 2px; }
+  .sidebar h3 { font-size: 11px; text-transform: uppercase; letter-spacing: 1px; color: var(--text-light); padding: 8px 20px 4px; margin-top: 8px; }
+  .sidebar a { display: block; padding: 5px 20px; font-size: 13px; color: var(--text-light); text-decoration: none; border-left: 3px solid transparent; transition: all .15s; }
+  .sidebar a:hover, .sidebar a.active { color: var(--primary); border-left-color: var(--primary); background: #e8f0fe; }
+  .content { flex: 1; padding: 32px 40px 80px; max-width: 860px; }
+  .content h2 { font-size: 22px; font-weight: 700; margin-top: 48px; margin-bottom: 16px; padding-bottom: 8px; border-bottom: 2px solid var(--primary); color: var(--primary-dark); }
+  .content h3 { font-size: 17px; font-weight: 700; margin-top: 32px; margin-bottom: 12px; color: var(--text); }
+  .content p { margin-bottom: 12px; }
+  .content ul, .content ol { margin: 8px 0 16px 20px; }
+  .content li { margin-bottom: 4px; font-size: 14px; }
+  code { background: #f1f3f5; padding: 1px 6px; border-radius: 4px; font-size: 13px; font-family: 'Consolas','Microsoft YaHei',monospace; color: #c7254e; }
+  pre { background: #1e1e1e; color: #d4d4d4; padding: 16px 20px; border-radius: var(--radius); overflow-x: auto; margin: 12px 0 20px; font-size: 13px; line-height: 1.6; }
+  pre code { background: none; color: inherit; padding: 0; }
+  table { width: 100%; border-collapse: collapse; margin: 12px 0 20px; font-size: 13px; }
+  th { background: var(--primary); color: #fff; padding: 10px 14px; text-align: left; font-weight: 600; }
+  td { padding: 9px 14px; border-bottom: 1px solid var(--border); vertical-align: top; }
+  tr:nth-child(even) td { background: #f8f9fa; }
+  tr:hover td { background: #e8f0fe; }
+  td code { white-space: nowrap; }
+  .callout { border-radius: var(--radius); padding: 14px 18px; margin: 16px 0; font-size: 14px; }
+  .callout.info { background: #e8f0fe; border-left: 4px solid var(--primary); }
+  .callout.warn { background: #fef7e0; border-left: 4px solid #f9ab00; }
+  .callout.tip { background: #e6f4ea; border-left: 4px solid var(--accent); }
+  .callout strong { display: block; margin-bottom: 4px; }
+  .diagram { background: #fff; border: 1px solid var(--border); border-radius: var(--radius); padding: 20px; margin: 16px 0; font-family: 'Consolas',monospace; font-size: 13px; line-height: 1.8; white-space: pre; overflow-x: auto; color: #444; }
+  .tree { background: #fff; border: 1px solid var(--border); border-radius: var(--radius); padding: 20px; margin: 16px 0; font-family: 'Consolas','Microsoft YaHei',monospace; font-size: 13px; line-height: 1.7; white-space: pre; overflow-x: auto; color: #333; }
+  .tree .dir { color: #1a73e8; font-weight: 700; }
+  .tree .file { color: #555; }
+  .tree .comment { color: #888; }
+  kbd { background: #eef1f5; border: 1px solid #cfd6de; border-bottom-width: 2px; border-radius: 4px; padding: 1px 6px; font-size: 12px; font-family: Consolas,monospace; }
+  @media (max-width: 900px) {
+    .sidebar { display: none; }
+    .content { padding: 20px; }
+  }
+</style>
+</head>
+<body data-page-node-id="DPaPYi85EWjbTFS58HZURA">
+
+<nav data-page-node-id="yxTuhtZibzmlGL1pH9rbat">
+  <span class="nav-brand" data-page-node-id="ywhyZa5yOW67eAnEjcIQ06">键鼠自动化助手</span>
+  <span class="nav-badge" data-page-node-id="sBt11ugWWhEWzGvKUO9Zsw">用户手册 · 开发版 v2.0</span>
+  <a class="nav-link" href="更新日志.html">📋 更新日志</a>
+</nav>
+
+<div class="layout" data-page-node-id="k0JF2bXN5PgCMxOEwBFff1">
+  <aside class="sidebar" data-page-node-id="klEXBWxMyhGyE1agV9Dks9">
+    <h3 data-page-node-id="bKC1nuQ7DNISjmNjGjqkQf">基础</h3>
+    <a href="#s1" class="active" data-page-node-id="faqomhbDc2JaarDzk3Z4Xf">1. 快速入门</a>
+    <a href="#s2" data-page-node-id="xYnqujIpCkoZYnJbBaE4oN">2. 三层模型</a>
+    <a href="#s3" data-page-node-id="i7ilGXH9kvjaugjyIq4Orf">3. 界面布局</a>
+    <a href="#s3-5" data-page-node-id="1yDrFvMrlExj9ADxODOF3C">3.5 典型场景示例</a>
+    <h3 data-page-node-id="R2C3Xqq5FjmBYZTVIwM80y">动作</h3>
+    <a href="#s4" data-page-node-id="cmBxEKp10Z92fJDUB3sRgQ">4. 动作类型全解</a>
+    <a href="#s5" data-page-node-id="wYjjpS70CIwfkwfMzRb89n">5. 执行次数</a>
+    <a href="#s6" data-page-node-id="PJubpGmQBBEnB4riUXMBik">6. 条件分支与工作流</a>
+    <h3 data-page-node-id="ARow8XY7QCsiJ4i8V8mA1S">高级</h3>
+    <a href="#s7" data-page-node-id="vQeDT5E9vEAdrOr3vTS5MX">7. 变量与表达式</a>
+    <a href="#s8" data-page-node-id="lPHZAeatLx6zz7oChQzGPU">8. OCR 识别</a>
+    <a href="#s9" data-page-node-id="VjhsqQouGthNnUt1KESoLN">9. 监控规则</a>
+    <a href="#s10" data-page-node-id="yEqd59vxttOLGAvc7NTWt5">10. 定时调度（Cron）</a>
+    <h3 data-page-node-id="7kyQ83YDtd0vy52nWV5qd5">实用功能</h3>
+    <a href="#s11" data-page-node-id="Ux9unR0MEiJphueJGDBsQs">11. 热键</a>
+    <a href="#s12" data-page-node-id="ZmzeOzLIsO083XJktJDw5T">12. 密码管理</a>
+    <a href="#s13" data-page-node-id="pJjlt8lL2hNqFj3XPVTrRY">13. 坐标追踪</a>
+    <a href="#s14" data-page-node-id="dChggHmY0ktIlOGMAni4XB">14. 数据管理</a>
+    <a href="#s15" data-page-node-id="0KMJXdEDDKiG8SaAr2PESk">15. 效果叠加（执行回显）</a>
+    <a href="#s16" data-page-node-id="klHc6ZLufX2h7S5ll58mIk">16. 实时可视化</a>
+    <a href="#s17" data-page-node-id="GzrhUOBHtTTCnKMTj7AF5W">17. 托盘与关闭行为</a>
+    <h3 data-page-node-id="ZvtBPNz5WpxE0mT3olavG6">其他</h3>
+    <a href="#s18" data-page-node-id="3nqTEEMz4o2uqbojTUeOeJ">18. 数据与配置文件布局</a>
+    <a href="#s19" data-page-node-id="ilT9N77ypY9isys7GknyyO">19. 迁移旧方案</a>
+    <a href="#s20" data-page-node-id="bTDgesqYwZTDWlFRAMiijE">20. 环境配置与排错</a>
+  </aside>
+
+  <main class="content" data-page-node-id="2VzGHgUrOlltqhjdfka644">
+
+<!-- ===================== 1. 快速入门 ===================== -->
+<section id="s1" data-page-node-id="FA38VLv0FthGSqfg12l9iO">
+<h2 data-page-node-id="3bocugV7vRS6S6VauHQnNu">1. 快速入门</h2>
+
+<h3 data-page-node-id="IaxMMdnqvdXCyiGBZpIWt3">启动程序</h3>
+<ul data-page-node-id="ZSREn9C6ExtLwTx5FeLvsj">
+  <li data-page-node-id="Wq3IHw9WZ98mnvHnOKOpIM"><strong data-page-node-id="LSEtDh4zXphBUo5uz67XlI">打包版</strong>：双击 <code data-page-node-id="QDrAkyxGyaCBnAtWzgLHH4">KeyMouseMate.exe</code>。</li>
+  <li data-page-node-id="5TaAwncLelCTDOsnKwACQi"><strong data-page-node-id="unFoMogpGzDZ9NpWebq8LY">源码版</strong>：命令行运行 <code data-page-node-id="osZKk8cgzop2YgEyp497od">python run.py</code>（或 <code data-page-node-id="yGnmppNBqzLgb3HHQ3xGQG">python -m rpa</code>，或双击 <code data-page-node-id="OErHJEMtlNAVDtBxWeTBAJ">dev\run\app_run.bat</code>）。</li>
+</ul>
+
+<div class="callout tip" data-page-node-id="TUIWWNrFnUFTZn7fvldoOD">
+  <strong data-page-node-id="qCcyqr7UDdCd3dCThNGEL1">💡 开发版说明：自动迁移</strong>
+  程序启动时检测到旧版布局（<code data-page-node-id="AIqJQriHbxM5Dh7x96kAA2">userdata/config/config.json</code>、<code data-page-node-id="idJjBTQQbEH16DwLNz0Qfw">userdata/config/passwords.db</code>、<code data-page-node-id="WefRSJ9lGBsneblbqE4cO0">userdata/floatbar/</code>）会自动搬迁到新布局（见 <a href="#s18" data-page-node-id="my1iVEnXwBkorPJugyLJ1y">第 18 章</a>），旧文件保留 <code data-page-node-id="1CBHdpNn6vUrizxw5dPs9U">.bak</code> 备份，无需手动操作。
+</div>
+
+<h3 data-page-node-id="JPSiAVB9hX993MrJ1MLDJ3">第一个方案（5 步完成）</h3>
+<ol data-page-node-id="WCJTRBHmbFMcPnKdFO6DfG">
+  <li data-page-node-id="sk3fXGziJqafzug1K5yVJI"><strong data-page-node-id="kGKzcARfsDKuVsGzh0lOJo">新建方案</strong>：菜单「方案 → 新建方案」，输入名称，保存。</li>
+  <li data-page-node-id="0CBXZlzSlBzEb00ctV01kU"><strong data-page-node-id="AZAM7bDMmbWLYukjGHHnix">新建节点</strong>：左侧「节点库」→「新建」，输入名称。</li>
+  <li data-page-node-id="heL55EtVVTkIiDQsvIUdEY"><strong data-page-node-id="zOE8RfrhDh6dHkTl6YBJCa">添加动作</strong>：弹出节点编辑器 →「添加动作」，选择「左键单击」，设置坐标，保存。</li>
+  <li data-page-node-id="96j2osme6w5x0tfhhm0x2l"><strong data-page-node-id="PWvrkzL9hJ5SRjOBuuEqJ7">添加步骤</strong>：在主界面「方案步骤」面板 →「添加步骤」，选择刚创建的节点。</li>
+  <li data-page-node-id="lBGZHjouRdP6Q8QAt6IACV"><strong data-page-node-id="3nTB4SywArVIpwF1yU4GwC">运行</strong>：点击「▶ 运行」按钮或按 <kbd data-page-node-id="9cWETs2ttDyWAi1B30WkFw">Ctrl</kbd>+<kbd data-page-node-id="MNCIzV6ksEd6N78lr8q4Bu">Shift</kbd>+<kbd data-page-node-id="hsYrG321Ps1JS1bRlmYwzX">S</kbd>。</li>
+</ol>
+
+<div class="callout info" data-page-node-id="JwRNeQ32B0DwfmjMeT8KC5">
+  <strong data-page-node-id="n5v13Zgaklcd7a2CF2hzdw">ℹ 节点可复用</strong>
+  节点是可复用的动作组，一个方案可以多次引用同一个节点。修改节点会同步更新所有引用它的方案。
+</div>
+</section>
+
+<!-- ===================== 2. 三层模型 ===================== -->
+<section id="s2" data-page-node-id="7BAQbFN5kndop6FEUlSgDH">
+<h2 data-page-node-id="a9Poq61xPVb2DMm1ghEv70">2. 三层模型</h2>
+<p data-page-node-id="EsmqO4yzPl6GNYyG1V8K45">程序以三层结构组织自动化任务：</p>
+<div class="diagram" data-page-node-id="DwWEqsQb42jVzFWmfTIeA1">方案（Plan）
+  └─ 步骤列表（NodeStep）
+       └─ 节点（Node）
+            └─ 动作列表（Action）</div>
+<table data-page-node-id="3OUwLXlclkIpTKouvG08JY">
+  <tr data-page-node-id="MMCjrAxlqxTFpihzEcjxo2"><th data-page-node-id="oiMQpUlFJaLWQ3kY2t3E1y">层级</th><th data-page-node-id="dTFoZmcIKxNgDEOQnSa0wa">文件位置</th><th data-page-node-id="xvnSkPqMD8Ht6ZhbI57wQq">说明</th></tr>
+  <tr data-page-node-id="h7DRZ60EHuc5UfjfkFVtk0"><td data-page-node-id="8emKBtQGO1NGjc50RqYBGx"><strong data-page-node-id="wxxCwOfsbGVCcPeZd7DGid">方案</strong> Plan</td><td data-page-node-id="63A04gWDOnEJfmXsbXMOaJ"><code data-page-node-id="p7VZ5crzfC1BTkCijTA7jh">userdata/plans/&lt;名&gt;.json</code></td><td data-page-node-id="JHGyrI2u07yqUN3Q65qHHf">一次完整任务 = 步骤列表 + 监控规则 + 运行参数</td></tr>
+  <tr data-page-node-id="2GuEVRpQhf3nVFd2T4LEec"><td data-page-node-id="QzAw8v7aRH5CrDJzJAWBnI"><strong data-page-node-id="KHjabC6yWz8HOKsfonWy18">节点</strong> Node</td><td data-page-node-id="0V9slF1GGPQlEJu5OIsIPK"><code data-page-node-id="xwSha6uMSzVwqXqbkJchhE">userdata/nodes/&lt;名&gt;.json</code></td><td data-page-node-id="8xoqQd8eMpgKfVHDqvzxhY">一组动作的具名单元，可被多个方案共享引用</td></tr>
+  <tr data-page-node-id="XEK9Atg5wQIOMuVuY34ZBF"><td data-page-node-id="KPCxa7MjTDGLve8JcBAtpE"><strong data-page-node-id="gJ6Yr6rgXqdnEKB1ZbGslF">动作</strong> Action</td><td data-page-node-id="R2lxJRILUSPiT1O25VQxfa">内嵌于节点</td><td data-page-node-id="VGu1t1hHr8DStQbVu3s75e">最小执行单元，共 33 种类型</td></tr>
+</table>
+<h3 data-page-node-id="NYnXJFXaMdGGGPBqHHbRKh">共享引用的意义</h3>
+<p data-page-node-id="QP6OFr7Z19s2tuEcUBvLRw">节点 = 可复用的动作组。例如「登录」节点被方案 A、B 共同引用，修改一次即全部更新。</p>
+<ul data-page-node-id="LdWoEGiaUye18v3hnyGlwK">
+  <li data-page-node-id="W3ebt53TCpxS85KaFPQIkR">节点库面板显示每个节点的<strong data-page-node-id="8NgL6flcpuv0umfgnzP3q7">方案引用数</strong>。</li>
+  <li data-page-node-id="MJi71k5k9ZICWKuxqgnkZl">删除有引用的节点时会列出受影响方案并弹出确认。</li>
+</ul>
+<h3>公共模板与私有实例（快照）</h3>
+<p>动作与节点都有两种形态，界面上用徽标区分：</p>
+<table>
+  <tr><th>徽标</th><th>形态</th><th>存放位置</th><th>改动影响</th></tr>
+  <tr><td>🔗</td><td><strong>公共实例</strong></td><td>关联动作库 / 节点库中的一份模板</td><td>改模板 → 所有引用处自动同步</td></tr>
+  <tr><td>🔒</td><td><strong>私有实例</strong></td><td>内嵌在所属方案 / 节点文件里</td><td>只影响这一处，不入库、不进分类树</td></tr>
+</table>
+<p><strong>快照（自包含）</strong>：公共实例在关联模板的同时，会把自己所用模板的<strong>全部字段副本</strong>一并存入方案文件。因此方案文件本身即完整可运行——单个 <code>.json</code> 直接分享给别人即可，接收方无需预先拥有相同的动作库 / 节点库。</p>
+<ul>
+  <li><strong>保存 / 改名模板</strong> → 所有引用它的节点与方案快照自动刷新。</li>
+  <li><strong>删除模板</strong> → 引用处自动降级为私有副本，方案仍可运行。</li>
+  <li><strong>编辑公共实例</strong> → 每次都弹二次确认：<code>修改模板</code>＝全局生效（所有引用处一起变）、<code>仅改这一份</code>＝转为私有（只影响当前方案）、<code>取消</code>＝不改（默认聚焦取消，防误触）。</li>
+  <li><strong>新建默认私有</strong>：新增的动作 / 节点默认是私有实例；需要复用时点「转为公共」，填名称与分类后写入库，重名须改名（不会自动加后缀）。</li>
+  <li><strong>导入分享的方案</strong>：命中本地同 ID 的模板则保持公共并刷新快照，未命中的自动降级为私有副本，导入后即可直接运行。</li>
+</ul>
+<h3 data-page-node-id="bxGPMkAbJxnDWZjBY6Kwhh">计划级参数</h3>
+<ul data-page-node-id="bdaxGZgmVfzM2fkBOha0qg">
+  <li data-page-node-id="QEn6SZMsec9VpD1GqXxbT5"><strong data-page-node-id="Tw2Tr7L0nFMwFkRUtaAt1C">启动延迟</strong>：方案启动后等待若干秒再执行第一步。</li>
+  <li data-page-node-id="eFud14MIqo0AVcDUqEtL3H"><strong data-page-node-id="nLb3J1NxtcWwA6TfPC1frz">动作默认间隔</strong>：每个动作执行后的等待时间（动作自身的"后置等待"可覆盖）。</li>
+  <li data-page-node-id="k93dgjdEHxUDs44w2FrJqt"><strong data-page-node-id="u2F5L8KKTjb0JYbzC6RoDD">默认方案</strong>：下次启动自动加载的方案（存于 <code data-page-node-id="Net41USkWm2Y4gFyRPJFZo">userdata/data.json</code>）。</li>
+</ul>
+</section>
+
+<!-- ===================== 3. 界面布局 ===================== -->
+<section id="s3" data-page-node-id="Rh3OLjQggZu45lZ18lUlSy">
+<h2 data-page-node-id="HQMJP7EwXZ0PPyYk9tXhkz">3. 界面布局</h2>
+<div class="diagram" data-page-node-id="y907YaiCeIxsa5pBXQH0EZ">┌──────────────────────────────────────────────────────┐
+│ ▶运行 ⏸暂停 ⏹停止  ●待机   方案: [下拉框 ▼]          │
+├──────────────┬───────────────────────────────────────┤
+│ 📁 方案       │  📋 方案步骤                          │
+│ （可拖拽排序）│    # | 节点 | 循环 | 间隔 | 条件 | 出错│
+│──────────────│                                       │
+│ 🧩 节点库     │  [添加 编辑 ▲▼ 删除 从此步运行]      │
+│ （可排序）    │                                       │
+├──────────────┴───────────────────────────────────────┤
+│ 启动延迟 / 动作间隔 / 监控规则  |  日志区             │
+│ © 2026 软件驿站 SoftHub.CC         鼠标: (1024, 768)     │
+└──────────────────────────────────────────────────────┘</div>
+<ul data-page-node-id="OE7aY2yIp9FtGbplYrtEaG">
+  <li data-page-node-id="8mcNFjHX5AXRbN0dJ3gW0u"><strong data-page-node-id="D0myD33s4j6dI6K9Utj6EM">状态栏</strong>：左侧显示版权，右侧红色坐标实时跟随鼠标。</li>
+  <li data-page-node-id="ExFwpFqYg4mSlrVhohZoGk"><strong data-page-node-id="GBFNwwvjqhR7Ehpajofffs">日志区</strong>：可上下拖动分割条调整高度。</li>
+  <li data-page-node-id="y7Zbz8TJPCWlqAK47ruAlH"><strong data-page-node-id="LfIVTsutgjhF19ECaKgNyL">折叠</strong>：点击「▶ 方案」/「节点 ▶」可折叠对应侧栏。</li>
+</ul>
+<h3 data-page-node-id="ckU0qyKR0kKTUpXfFRjvIH">菜单栏概览</h3>
+<table data-page-node-id="gWce9XnVx1YQAZVZaHtbhw">
+  <tr data-page-node-id="509y0pXf15etWggCBGNNOp"><th data-page-node-id="GrKVsBdgkmk6blB3TgNr7K">菜单</th><th data-page-node-id="8On6V9YdmMcLF0HepnKMep">主要项</th></tr>
+  <tr data-page-node-id="p8uKZ4dIeUbfiC8UawFnB7"><td data-page-node-id="vYcLd18VKXzfe5LeE8Ok8w">方案</td><td data-page-node-id="g9VUxizbTYRqvTD5HSW2UD">新建 / 迁移旧方案 等</td></tr>
+  <tr data-page-node-id="wI8HiRA3jL8YOcBYizp200"><td data-page-node-id="yD5kLK8UdI0cCwZ8bXX6O6">编辑</td><td data-page-node-id="9r01HNmT7YiloAXyZvdhxU">热键设置、OCR 设置、密码管理、监控规则、定时调度 等</td></tr>
+  <tr data-page-node-id="mfFsI95c6xihICGA0XCb44"><td data-page-node-id="xi57dlDk7X2vMAU0N22kcq"><strong data-page-node-id="F3YgXn3HUqELA5Jb1YwAYS">设置</strong></td><td data-page-node-id="ED95MhGlQVO8Wwx93EtI1u">极简/自定义模式、紧凑布局、主题、自动隐藏面板、效果设置、<strong data-page-node-id="QdQMaSlTAZ4ZiSVtTTtu5A">启用浮动工具栏</strong>、<strong data-page-node-id="QuFWqnMGMihSglUaWolIgG">设置可视化…</strong></td></tr>
+  <tr data-page-node-id="wuPnxWe18eNoca4xuOKYBf"><td data-page-node-id="f6nmGiG5SRHGgFjB6WKfUt">帮助</td><td data-page-node-id="ad56ggsTuHUxzRGKbpjPwy">关于（版本 / 二维码）</td></tr>
+</table>
+<div class="callout info" data-page-node-id="UUOYHZj3yXHUlfpT9tPa0Q"><strong data-page-node-id="WOd40FYIXdw3wSDdiFj9iN">ℹ 更名说明</strong>原「外观」菜单已更名为「<strong data-page-node-id="WvTpAR7zm3q56xwJeFAPAp">设置</strong>」。</div>
+</section>
+
+<!-- ===================== 4~10 ===================== -->
+<section id="s3-5" data-page-node-id="DW5MFBv4SHBhYUCtDQGf1F">
+<h2 data-page-node-id="Z1nGpsK4UyrONSSCNcHcd3">3.5 典型场景示例</h2>
+<h3 data-page-node-id="MOqbKMIulmmpkBMBBde2yk">示例一：自动登录网页</h3>
+<pre data-page-node-id="wjueT9OmxunMHroQ5BGpsw"><code data-page-node-id="Hlm9v1wg6OhOIGWsg7vhQ1">方案「自动登录」：
+  步骤1「打开网站」(1轮)
+    节点「登录-打开网页」
+      ├─ action: open_website → https://example.com/login
+      └─ action: wait → 3s
+  步骤2「输入凭证并登录」(1轮)
+    节点「登录-填表单」
+      ├─ action: ocr_check → 关键词"用户名", 区域追踪
+      ├─ action: tab_click → 点击用户名输入框
+      ├─ action: input_text → 用户名文本（可用 {变量.用户名}）
+      ├─ action: tab_click → 点击密码输入框
+      ├─ action: input_text → 从密码库取密文
+      └─ action: left_click → 坐标点击[登录]按钮</code></pre>
+<h3 data-page-node-id="s8dsKqwVFaHuVyz5F4uLvg">示例二：批量表单提交 + 弹窗处理</h3>
+<pre data-page-node-id="N6aKuMhy3qIZXUJBDsfwgz"><code data-page-node-id="CKbsR4PuVWNPyUoTlw0hY6">方案「批量提交」：
+  步骤1「循环提交」(100轮)
+    节点「提交操作」
+      ├─ action: wait → 0.5s
+      ├─ action: ocr_check → 关键词"提交按钮", 点击
+      ├─ action: wait → 1s
+      └─ action: goto → 回到本节点第1步
+  监控规则1「错误弹窗处理」：错误,报错,异常 → 节点「处理-报错弹窗」
+  监控规则2「确认弹窗」：确认,确定,是否继续 → 节点「处理-确认弹窗」</code></pre>
+<h3 data-page-node-id="DrxucHfGSaPJR62QEde5El">示例三：定时巡检报表</h3>
+<pre data-page-node-id="6Ll0w7QqSkGUpDIN2yHtMW"><code data-page-node-id="rqzZVqfVOS4MdNECKNBMcX">方案「每日巡检」：
+  步骤1「启动巡检」：open_file → D:\scripts\inspection.py
+  步骤2「等待结果」：wait_text → "完成"或"error"，超时300s
+  监控规则「意外弹窗」：异常,崩溃,退出 → 节点「处理-异常」
+定时调度：Cron 0 0 9 * * 1-5 *（工作日 9:00:00）→ 每日巡检</code></pre>
+</section>
+
+<section id="s4" data-page-node-id="CMnjpDon3F9KJ71L43jwEj">
+<h2 data-page-node-id="YrLnk9eL7qjuiBGa0vIsHG">4. 动作类型全解</h2>
+<h3 data-page-node-id="FdBcth2v1w84kZzrZ0IKld">4.1 鼠标类</h3>
+<table data-page-node-id="XhdvJ4ni5K8aEgrhpsgNQd">
+  <tr data-page-node-id="NZTD2R2paPhEeNWFYUT0hE"><th data-page-node-id="GgY4yZ9Ult34YQzH44Yf87">动作</th><th data-page-node-id="Dsj4sXShv8pRvdUBrZ6Arw">参数</th><th data-page-node-id="F9sSKbDj3HqTIUlWcbACJE">说明</th></tr>
+  <tr data-page-node-id="uyxDP2F1rxEDcDqLZpQAb2"><td data-page-node-id="9O96DMrEBQB9rCbmo3MGw2">左键单击</td><td data-page-node-id="RFdSNUSqfgIoGCX5VD8ujm">区域（左上X/Y / 右下X/Y）</td><td data-page-node-id="J6L0tThmQA7B8TJGOnPYNX">点击单个点（区域宽高为0）</td></tr>
+  <tr data-page-node-id="cDStBiMDdL1Ni7Hxmqrozj"><td data-page-node-id="E4QwP2FeU8PooSOOfus5Wp">左键双击</td><td data-page-node-id="t0t2ELMcmc25VJVSumFzvL">同左</td><td data-page-node-id="Wu31KDLJQxxnTfd5kNAY2X">双击</td></tr>
+  <tr data-page-node-id="WlxX1YCbEBqRY2vtAMlXU9"><td data-page-node-id="oANTYC1TH1iw37ctONO0Z4">右键单击</td><td data-page-node-id="fAiRwihBkId7j6YDZDy9Q2">同左</td><td data-page-node-id="uHiCBQOh1DVG58s3RGJ864">右键</td></tr>
+  <tr data-page-node-id="NqOpDfG7zAmbmoL3XqYyJJ"><td data-page-node-id="wIxFU6b9FgaXBbHfCHBZuf">移动鼠标</td><td data-page-node-id="Qofdg2ptf0yKZrq57XjOJh">起点 + 终点（可选）</td><td data-page-node-id="GLtAiIMho2oGxCbuylOjGr">无终点直接移动；有终点先到起点再平滑移到终点</td></tr>
+  <tr data-page-node-id="kuUqPIIKl0NyOlW7bppiy3"><td data-page-node-id="nFd019Y2Uuh5fF7516GKHC">拖动选择</td><td data-page-node-id="wXQ7gvtGxlcZQoUxU4anNr">起点 + 终点</td><td data-page-node-id="Qync7FcaSZ829A4p1C02l0">按住左键从起点拖到终点</td></tr>
+  <tr><td>滚轮滚动</td><td>X,Y + 方向(up/down) + 格数</td><td>先移动到坐标，再滚动滚轮 N 格</td></tr>
+
+</table>
+<h3 data-page-node-id="7zj6sjeDMzlbVlWDEODZ5N">4.2 输入类</h3>
+<table data-page-node-id="gk1GmnKJuXkaHG907z8ztX">
+  <tr data-page-node-id="IwVN3pOTAqBCNGKROmvYyp"><th data-page-node-id="hZnWcRi8rRXxBmsAlwyJON">动作</th><th data-page-node-id="1AIEhzO3V4UBzxpSIUBuq6">参数</th><th data-page-node-id="89ElCuPdtsDNjBqLcaFY7G">说明</th></tr>
+  <tr data-page-node-id="xwMDP2A4DPSzCXBf40QvsO"><td data-page-node-id="b6aKlADHIFuGA8I1ZrRXs9">输入文本</td><td data-page-node-id="2saeh3wKnaO8k5uh7njGrB">X,Y + 文本 + 先清空 + 密码库</td><td data-page-node-id="pdcgBuHc4JCohqnSw6I4vP">点击获得焦点后粘贴；支持 <code data-page-node-id="cKPMWDhkvE8mN6XrVNGkUO">{变量}</code> 模板；选密码库自动取明文</td></tr>
+  <tr><td>单击后输入</td><td>X,Y + 文本 + 先清空 + 密码库</td><td>先左键单击坐标获得焦点，再粘贴文本；支持 {变量} 模板与密码库</td></tr>
+  <tr><td>单击后输入完Tab</td><td>同上</td><td>同「单击后输入」，输入完成后自动再按一次 Tab</td></tr>
+  <tr><td>双击后输入</td><td>同上</td><td>双击定位（如选中行/展开列表项）后粘贴输入文本</td></tr>
+  <tr><td>双击后输入完Tab</td><td>同上</td><td>同「双击后输入」，输入完成后自动再按一次 Tab</td></tr>
+  <tr data-page-node-id="CBVxQJBfsTeSCAppip4LOI"><td data-page-node-id="VRnIvYMxHywbNMB5QhCo6n">Tab后点击</td><td data-page-node-id="jyQp9aPHAxJSnLVEZBfoDj">X,Y（或追踪）</td><td data-page-node-id="rDgGbRatsIKwz5CKYwaVAr">模拟 Alt+Tab 切换窗口后点击</td></tr>
+  <tr data-page-node-id="d4xwSNJiNAGFFIZHso9yDe"><td data-page-node-id="cYDdCinMxX66GErh2zpxio">Tab后输入</td><td data-page-node-id="wr2WFYQU5AAV6Vr4hMuThE">X,Y + 文本</td><td data-page-node-id="XSds1hKNLYaR3m153UmdK2">模拟 Alt+Tab 后直接输入（无需点击）</td></tr>
+  <tr data-page-node-id="deY29Dv7qYAFRNZSuJV7rs"><td data-page-node-id="NEQvLJ8XZPkC7JudH8JtwT">OCR偏移点击</td><td data-page-node-id="llpbyFJCf0RQeBZHDfwNiJ">区域 + 偏移量 + 关键词</td><td data-page-node-id="C4bQpHDVjnpvsBMuixXI2D">识别关键词位置，按偏移点击（不输入文本）</td></tr>
+  <tr data-page-node-id="9PuXGfK40yHcg1WPOrKpXS"><td data-page-node-id="aAmQ3unVbrZMpmasOE00E9">OCR偏移点击输入</td><td data-page-node-id="9hGtWa3bK8dBqsat2Ct4Eh">区域 + 偏移量 + 关键词 + 文本/密码</td><td data-page-node-id="sdEm65JihhESCnf3RMDAXs">识别、偏移点击后输入文本</td></tr>
+  <tr><td>OCR偏移双击</td><td>区域 + 偏移量 + 关键词</td><td>识别关键词位置，按偏移双击</td></tr>
+  <tr><td>找图点击</td><td>模板图片 + 搜索区域（可选）+ 偏移量 + 跳转</td><td>cv2 模板匹配（阈值 0.8），命中点击中心+偏移</td></tr>
+  <tr><td>复制选区到变量</td><td>X,Y（可选）+ 存入变量</td><td>Ctrl+C 复制选区内容，读剪贴板存入 {变量}</td></tr>
+
+  <tr data-page-node-id="LEBSNZF5SwhsHWnoCXwS3Q"><td data-page-node-id="TWyt3KhBW1MkZDtDnJYzxK">按键</td><td data-page-node-id="pClPS9Hd3jqXlmyXdRwzBh">键名</td><td data-page-node-id="EpGXaSvHnqMJ9U4RZehcOj">如 <code data-page-node-id="3JCeT8zOUfQToEH8mrWOci">enter</code>、<code data-page-node-id="qdiNfrX03zXHRiC31sFQ98">ctrl+c</code>、<code data-page-node-id="xbi83YNqUTnsL4kiUuFs3T">alt+f4</code>、<code data-page-node-id="v7w1zY8J1qz2yVDgTnPHqJ">f5</code></td></tr>
+</table>
+<h3 data-page-node-id="qlhQz8WHGkfaavCSOmClZw">4.3 等待类</h3>
+<table data-page-node-id="AIJtcaf7gsjsgNVbIOvuBd">
+  <tr data-page-node-id="nACPGkypP5Xk1syUWAh0hv"><th data-page-node-id="UAzHgTmkZXBFG1g2Fcplu5">动作</th><th data-page-node-id="icGaSJ9Imn0MB6oi0ZjwwY">参数</th><th data-page-node-id="jhf3gb5z0uQf6bJa5aJBkg">说明</th></tr>
+  <tr data-page-node-id="0v5Fpcrh9MmdbJ0WErl1vE"><td data-page-node-id="awaUQ1n5pVg7oFMU9u1EfN">等待</td><td data-page-node-id="YGEAKr60LFOgokHmXI4rss">时长（秒）</td><td data-page-node-id="6sBEdleieoGeTL9mDOtpAJ">固定等待，可被暂停/停止打断</td></tr>
+  <tr data-page-node-id="2c6iS1WV99gxLIx0SGUNrW"><td data-page-node-id="WMGm02eygekk2zPsBBtvhJ">等待文本</td><td data-page-node-id="2UlqlgAZ1rI7XyIEAOvCsm">区域 + 关键词 + 超时 + 轮询间隔</td><td data-page-node-id="91c1LTIXAx6daj1CUzoRyc">轮询 OCR 直到出现关键词或超时</td></tr>
+  <tr><td>等待窗口</td><td>窗口标题关键词 + 超时 + 轮询间隔 + 跳转</td><td>轮询等待标题含关键词的窗口出现，出现即激活</td></tr>
+  <tr><td>等待图片</td><td>模板图片 + 搜索区域（可选）+ 超时 + 轮询间隔 + 跳转</td><td>轮询找图直到出现或超时</td></tr>
+  <tr><td>随机延迟</td><td>基准时长（秒）</td><td>在基准时长 50%~150% 之间随机等待</td></tr>
+
+</table>
+<h3 data-page-node-id="lVgN1Enj5BCoSB3nJBbo8a">4.4 OCR 类</h3>
+<table data-page-node-id="uWTWvAnQ2NMuxigBpXa9Mo">
+  <tr data-page-node-id="FAbW3a3aCLDvyMBFeFXKDZ"><th data-page-node-id="pJZGumaO2dA3ToFMFwxRaq">动作</th><th data-page-node-id="44VeUJSGFFRzFzEDMYKl1u">参数</th><th data-page-node-id="RK6l1q4swyG4uf2eFzFQFZ">说明</th></tr>
+  <tr data-page-node-id="w933S2lYUZa27z0xaHktNY"><td data-page-node-id="Dr6bRXrBkjKEmhkMpS59sq">OCR识别</td><td data-page-node-id="qNstDVfAx4DycKT2le6FPI">区域 + 关键词 + 匹配模式 + 存变量 + 跳转</td><td data-page-node-id="jCyEC1B187pxyht2kHMZlM">单次识别；命中/未命中可分别跳转</td></tr>
+</table>
+<p data-page-node-id="KS6nReglC5x2E6c9jgZ2vv"><strong data-page-node-id="B0nk4MMHqQEyglmxiMj5RJ">匹配模式</strong>：<code data-page-node-id="HurmQD1TV0ltvTYtdteDpi">任意（OR）</code> 命中任一关键词即成功；<code data-page-node-id="0Ipq33z2Vr1g8leYyXP3rB">全部（AND）</code> 所有关键词都出现才成功。</p>
+<h3 data-page-node-id="laY9qRh6NFHv4OvZhDgGDx">4.5 流程控制类</h3>
+<table data-page-node-id="gHKT8U51ShYA2EvLsHsdv1">
+  <tr data-page-node-id="laFscCV6tLK2Cd6JabNP0H"><th data-page-node-id="M5koBcHRegKRD46zYYuFSV">动作</th><th data-page-node-id="hVoDkAoJRBLU81HLrM6NWd">参数</th><th data-page-node-id="xswzHNKuFiPjrB330xkwmF">说明</th></tr>
+  <tr data-page-node-id="MR8kriBtsVIyMEbEHUOlGM"><td data-page-node-id="CRvZQ86LOxvNKpHor2DzXt">跳转</td><td data-page-node-id="lSPP3pu9YVDNCI87qsw76C">目标序号 N</td><td data-page-node-id="vuhNh3OZ7L78jHQHTR5yQ8">跳到节点内第 N 个动作（向后跳=循环）</td></tr>
+  <tr data-page-node-id="kIK1urHdWKKw3Kh6ySBm4k"><td data-page-node-id="pYOKXFZ6BA60ZpS9KSRqJI">设置变量</td><td data-page-node-id="6cRJwCADFKPuJyhG8fWDf3">名称 + 值</td><td data-page-node-id="xz6bzz590lrqiS8LsmvVFI">创建 <code data-page-node-id="YMcJrwQtCUBK63URIX1QSK">{变量.名称}</code>；支持模板、数字、true/false</td></tr>
+</table>
+<h3 data-page-node-id="Fx7UwtUFIrGxSDaIbm3hqE">4.6 系统类</h3>
+<table data-page-node-id="1HtWD3jLFwIcJSUGSWdraa">
+  <tr data-page-node-id="uclt31w8hPdS9PuEF9S5ha"><th data-page-node-id="JKy3aYuRUN4tJAuLibFK7N">动作</th><th data-page-node-id="bSaA16aS6MozPNWYoJw8l3">参数</th><th data-page-node-id="xEqu7mFbSocNs57GVrOn3G">说明</th></tr>
+  <tr data-page-node-id="wRzXXrjs9BQEQGNXF5DZDa"><td data-page-node-id="lbHng91uJaFF5fYEoKbMYq">打开文件</td><td data-page-node-id="I3f90MCWDcNhceG20vDZ3r">路径</td><td data-page-node-id="q6McqhxIsSiamAUWyG8qWC">调用 <code data-page-node-id="WpiIa6ztJWxvCC6iUbjlMx">os.startfile</code> 打开文件或启动程序</td></tr>
+  <tr data-page-node-id="gdWX6QK3IzUibcEkbcOKpW"><td data-page-node-id="7Ee60btFhwIJCM2pNhXcOp">截图</td><td data-page-node-id="R6vC0yOikAZZuP4cCPCQ0g">区域</td><td data-page-node-id="XYKVzEN7pluGuaDSWepJKN">保存到桌面 <code data-page-node-id="jGAkB0BFetZo2fD3tukXWW">screenshot_时间戳.png</code></td></tr>
+  <tr data-page-node-id="RnPXiv7r9YB9HoLirWGe7G"><td data-page-node-id="C2FMASdeN7EPf9jm3RwbtQ">打开网站</td><td data-page-node-id="GtPytbK8u2At5NHaMPFUkV">网址</td><td data-page-node-id="IHdHwzY6thxTa6FrHpYVqs">打开指定网址</td></tr>
+  <tr data-page-node-id="Cu96BhfdiX8nvKArBFUpss"><td data-page-node-id="h09elJIJyzVKQBD7pL4cAG">窗口最大化</td><td data-page-node-id="3yuo5VX9fER9M3gwZkimM7">无</td><td data-page-node-id="cJRwFMqy5XzfIV1p89eGCN">激活前台窗口并最大化</td></tr>
+  <tr><td>激活窗口</td><td>窗口标题关键词（逗号分隔）+ 跳转</td><td>按标题关键词找到窗口带到前台</td></tr>
+  <tr><td>写文件</td><td>目标文件 + 写入内容（{变量} 模板）</td><td>追加一行到文件末尾，自动加时间戳前缀</td></tr>
+
+</table>
+
+<h3>4.7 新增动作详解与典型场景</h3>
+<p>下面对近期新增的 13 种动作（动作总数已达 33 种）展开说明主要用法与应用场景，参数速查见上文 4.1～4.6 各表。</p>
+<table>
+  <tr><th>动作</th><th>怎么用</th><th>典型场景</th></tr>
+  <tr><td colspan="3"><strong>▍点击 + 输入组合</strong></td></tr>
+  <tr><td>单击后输入</td><td>填坐标定位 + 输入内容：先单击该坐标获得焦点，再粘贴文本；执行次数 = 重复点选输入几遍</td><td>表单逐项填写（点用户名框输入账号、点密码框输入密码），一个动作顶替「单击 + 输入文本」两步</td></tr>
+  <tr><td>单击后输入完Tab</td><td>同「单击后输入」，输入完成后自动再按一次 Tab 跳到下一控件</td><td>连续表单一条链填完——"输完账号按 Tab 到密码框"，省去为每个输入框单独算坐标</td></tr>
+  <tr><td>双击后输入</td><td>双击坐标后粘贴文本</td><td>需双击才进入编辑状态的控件：Excel/表格单元格、文件重命名框、双击展开树节点；双击也可用于选中一段词后覆盖输入</td></tr>
+  <tr><td>双击后输入完Tab</td><td>同「双击后输入」，输完自动按 Tab</td><td>表格类软件中"双击单元格 → 输入 → Tab 到下一格"的连续录入</td></tr>
+  <tr><td colspan="3"><strong>▍鼠标增强与数据采集</strong></td></tr>
+  <tr><td>滚轮滚动</td><td>坐标定位 + 方向(up/down) + 滚动格数：先把鼠标移到该位置，再滚动 N 格</td><td>长页面翻页浏览、下拉列表选第 N 项、滚动触发列表懒加载；比按键 PageDown 粒度更细</td></tr>
+  <tr><td>复制选区到变量</td><td>可选填坐标（填了先点一下聚焦），然后 Ctrl+C 复制当前选区，读剪贴板存入指定变量；之后其它动作用 <code>{变量.名}</code> 引用</td><td>从网页/软件抓当前选中内容：复制订单号、报错信息、价格，供打开网址、写文件、条件判断使用。注意 Ctrl+C 复制的是"当前已选中"的内容，目标处需先有选区</td></tr>
+  <tr><td colspan="3"><strong>▍窗口管理</strong></td></tr>
+  <tr><td>激活窗口</td><td>填窗口标题关键词（逗号分隔多个，任一包含即命中），把匹配窗口带到前台；未命中可跳转</td><td>多软件协作流程的第一步（先激活"记事本"再写入）；运行前确认目标程序已打开，没开走失败分支</td></tr>
+  <tr><td>等待窗口</td><td>标题关键词 + 超时秒数轮询等待，窗口出现即激活，超时走未命中跳转</td><td>等"导出完成"弹窗、等软件启动后的主窗口、等登录成功页；"出现才继续、超时走失败"比盲等固定秒数可靠</td></tr>
+  <tr><td colspan="3"><strong>▍图像识别</strong></td></tr>
+  <tr><td>找图点击</td><td>截一小块目标图作模板，在区域内模板匹配（阈值 0.8），命中点击中心+偏移</td><td>控件位置会漂移的界面（按钮今天在 (800,300) 明天在 (795,310)，坐标点击会失效）；也适合无文字的图标/按钮，按"长什么样"定位而非坐标</td></tr>
+  <tr><td>等待图片</td><td>模板图片 + 超时轮询，图像出现即继续（只等不点），超时走跳转</td><td>等加载圈消失、等"下载完成"图标出现、等进度条走完；适用于弹窗无标题或内容型提示的场景</td></tr>
+  <tr><td colspan="3"><strong>▍OCR 增强与流程辅助</strong></td></tr>
+  <tr><td>OCR偏移双击</td><td>识别关键词后，在命中位置加偏移做双击</td><td>双击打开识别到的条目：文件列表双击文件名、聊天记录双击联系人、表格双击某行进入编辑；与 OCR偏移点击/OCR偏移点击输入 配成三件套</td></tr>
+  <tr><td>随机延迟</td><td>填基准时长（秒），实际在基准值的 50%~150% 间随机等待</td><td>批量提交时每步间随机停顿，让操作节奏更拟人；也适用于等响应时间不确定的页面</td></tr>
+  <tr><td>写文件</td><td>目标文件路径 + 写入内容（支持 {变量} 模板），追加一行并自动加时间戳前缀</td><td>运行结果留痕：把复制到的订单号、OCR 识别结果逐轮追加到 txt/csv；配合「复制选区到变量」组成"抓取 → 落盘"流水线</td></tr>
+</table>
+<p><strong>组合示例：自动取数流水线</strong>——一条流程串起多个新动作：</p>
+<table>
+  <tr><th>步骤</th><th>动作</th><th>配置要点</th><th>作用</th></tr>
+  <tr><td>1</td><td>激活窗口</td><td>关键词：业务系统</td><td>确保目标程序在前台</td></tr>
+  <tr><td>2</td><td>等待图片</td><td>加载圈消失模板，超时 30 秒</td><td>等页面加载完</td></tr>
+  <tr><td>3</td><td>找图点击</td><td>导出按钮截图，区域为 0 时全屏找</td><td>位置会漂的按钮用图找</td></tr>
+  <tr><td>4</td><td>等待窗口</td><td>关键词：导出完成，超时 60 秒</td><td>等结果弹窗出现</td></tr>
+  <tr><td>5</td><td>复制选区到变量</td><td>不填坐标，存入变量：单号</td><td>抓取数据到变量</td></tr>
+  <tr><td>6</td><td>写文件</td><td>采集结果.txt，内容：<code>{变量.单号}</code></td><td>落盘留痕</td></tr>
+  <tr><td>7</td><td>随机延迟</td><td>基准 2 秒</td><td>下一轮前拟人停顿</td></tr>
+</table>
+</section>
+
+<section id="s5" data-page-node-id="RcvZXwzWyy8zVo0JzfhlIX">
+<h2 data-page-node-id="AxGSEFjeEcDLv3td5annnn">5. 执行次数</h2>
+<p data-page-node-id="hBnjHkuuYZ8bWcbkJHUTZ0">所有动作类型均支持<strong data-page-node-id="LqrfENgGMMIUJBxgQEiQDd">执行次数</strong>（<code data-page-node-id="JhzzXv0VM4FgmWwOuk2kcY">loop_count</code>），默认 1 次。</p>
+<h3 data-page-node-id="l7wNSNDWoFMNLChSuEoInH">设置位置</h3>
+<ul data-page-node-id="1wn0Y1yA1lvpJwtg1IwgHP">
+  <li data-page-node-id="nXpKT8S0DgZBwMDB6tvITo">节点编辑器 → 编辑动作 → "执行次数" 字段</li>
+  <li data-page-node-id="PjU8JQ27RrqWemz2AwnEMh">动作管理器（全局库）→ 编辑 → "执行次数" 字段</li>
+  <li data-page-node-id="s3Ca8aqgmB5VAD6DHcXl2r">动作列表表格中均有"执行次数"列，支持右键「列设置」隐藏或调整宽度</li>
+</ul>
+<h3 data-page-node-id="VY4DgRDX12qZLAsdF7LDOY">行为</h3>
+<ul data-page-node-id="zsO1qxEI8GSrIhUxCtjwZy">
+  <li data-page-node-id="sFSptQtNFT46SDkje7dBFD">动作执行 N 次后，继续下一个动作；每次之间自动等待"后置等待"时间。</li>
+  <li data-page-node-id="BC6IogfbfjzGR9XAVO8yC8">例：动作 A 执行次数=2，动作 B 执行次数=1 → 顺序为 A→A→B。</li>
+</ul>
+</section>
+
+<section id="s6" data-page-node-id="cPPb5Oy7v3BJgn7rvNhBxj">
+<h2 data-page-node-id="nVi5LhoFqgKq8Qocd1ADUz">6. 条件分支与工作流</h2>
+<h3 data-page-node-id="k3mJ7aFek5dRsn5vvCmGdz">6.1 步骤级条件</h3>
+<table data-page-node-id="45of6BDFwmaEtTK1JSv9GN">
+  <tr data-page-node-id="f9qj1YiqAqeT0GsQiD3EyM"><th data-page-node-id="7F4hS1BEW64Hr3UP7IqG6D">条件类型</th><th data-page-node-id="9hzGNMkNVk9lFkKkZFoZHX">说明</th></tr>
+  <tr data-page-node-id="kFygSJyrFNSoYtFMOWAcdT"><td data-page-node-id="TqA5UyaE3pK8O7sfTpfs2m">无条件</td><td data-page-node-id="6GvtpSqj5slyQ0yMON8VJJ">始终执行（默认）</td></tr>
+  <tr data-page-node-id="LJ1VmHczVPWSWRwiD97AQQ"><td data-page-node-id="iFgiRY5zIogSEoGslfChMH">变量表达式</td><td data-page-node-id="PjwzmNVy9YnqJfnOLGgTT4">表达式为 true 时执行</td></tr>
+  <tr data-page-node-id="MgYF1DDQC9knGU3lC2d8J0"><td data-page-node-id="Kcl7vpmiQbYoP3Uwojms2I">OCR 区域识别</td><td data-page-node-id="V0pALSFNbu1DA3pnYfr5PB">指定区域 OCR，命中关键词时执行</td></tr>
+  <tr data-page-node-id="KsZajkXHsHzwaXvFYexil6"><td data-page-node-id="bPO9rOdYmAgSlwCrYIh2l6">OCR 数值比较</td><td data-page-node-id="ehZisHvgL5dirlIpcAP6A1">识别区域第一个数字，与阈值比较</td></tr>
+</table>
+<p data-page-node-id="T5PnGw7jsBRL2j6oYrpkyy"><strong data-page-node-id="KNmC16Nxc5GCxM5wJKCrbs">条件不满足时</strong>：跳过（默认）/ 跳转到步骤 #N / 终止方案。</p>
+<h3 data-page-node-id="KvOvHog63ROKuxcFb0Ng12">6.2 动作出错处理</h3>
+<table data-page-node-id="VdcwhAIh99unbBGHSC0Mw1">
+  <tr data-page-node-id="MlK8BFFAOmPqzPEf51tlYV"><th data-page-node-id="zSiHE8fs9W6ER2cJEXYAKa">策略</th><th data-page-node-id="8gQV5AljgILBqBclMZrDup">说明</th></tr>
+  <tr data-page-node-id="4UqOTpchMTXETIdAND7SUz"><td data-page-node-id="ewnVRgXnAvDQ88cxinWjY6">继续</td><td data-page-node-id="etVVvaoNSfL1BjfOYwDKuX">记录日志，执行下一个动作（默认）</td></tr>
+  <tr data-page-node-id="nK4GD7qOSLuFHW27mJ5rhh"><td data-page-node-id="iLzaHGMqCvO325H5AdfZYU">重试 N 次</td><td data-page-node-id="ChtSoUntVD3W8zlhSPv8tT">失败后重试，仍失败则按策略处理</td></tr>
+  <tr data-page-node-id="tQKLREbYFx1gOvDorhYIeQ"><td data-page-node-id="RAQcja0tOzVMMVDRa70DFF">跳转到步骤 #N</td><td data-page-node-id="AOFj9gd6XxVplQacWCHdmu">跳到指定步骤</td></tr>
+  <tr data-page-node-id="xD7mcAEu2mJKyJs6sFu6kH"><td data-page-node-id="kceu7ARDE6dPChiYlVBwj5">中止方案</td><td data-page-node-id="bZsgP3DOg2wpLIgH2JWTT3">停止整个方案</td></tr>
+</table>
+<h3 data-page-node-id="NqZhJihZbHJOTahFhTxCic">6.3 动作级跳转（节点内）</h3>
+<ul data-page-node-id="YkGLQmE7KDeWhftP0SRZNL">
+  <li data-page-node-id="gvcNywDAwrfJxTcGA5BvYK"><strong data-page-node-id="MXsqw9TEfyvyr6LhVG1Brc">命中→跳转</strong>：OCR 命中后跳到节点内第 N 个动作</li>
+  <li data-page-node-id="FoCRtoDJYA1JCKeMmXj70b"><strong data-page-node-id="jFZ18fvYQZOLeSmR4t0TqG">未命中→跳转</strong>：OCR 未命中后跳到第 N 个动作</li>
+  <li data-page-node-id="j2ULiBCjquYY4SMigJxJPJ">可组合形成节点内循环</li>
+</ul>
+</section>
+
+<section id="s7" data-page-node-id="e8xQvGhzRGvrbW1LlFyOSY">
+<h2 data-page-node-id="1iUPSeXD9M1R9I9qjmmxfV">7. 变量与表达式</h2>
+<h3 data-page-node-id="8O4nmgoAVf20DJaCLPPLxV">7.1 内置变量</h3>
+<table data-page-node-id="Xd4YUtKrYoc55e3qUmDreq">
+  <tr data-page-node-id="YjFMrgsi58AYUEqCY7tuYT"><th data-page-node-id="7K2bc2s8XZRxhVQgCVHluY">变量</th><th data-page-node-id="L1K54ZMUHU0blol4aNnPNR">含义</th></tr>
+  <tr data-page-node-id="QH57xYpBoeI4rfmyKnjo9W"><td data-page-node-id="TH1xnbvt9rgmrUsuzkQnlV"><code data-page-node-id="hcNDsgvj1mBK7awZsxjwfH">{轮次}</code></td><td data-page-node-id="dQZBqTLlJeEnXjWJ5y3FCb">当前节点循环第几轮（1 基）</td></tr>
+  <tr data-page-node-id="4p6cN5J9W4doErRAAC2GYs"><td data-page-node-id="f5C5tNLk3yr1CbojJ4CkaT"><code data-page-node-id="Egi3a1SPapd1q1N4wDqoM3">{步序}</code></td><td data-page-node-id="JbOPwp2TEY1fkqX9YNAAKo">当前步骤序号（1 基）</td></tr>
+  <tr data-page-node-id="94PQCbcYfc06HgYzhzV84I"><td data-page-node-id="lQENYDEd6HD5L2nqK1k1F0"><code data-page-node-id="Un7xqXhhsNhzIcIfOKvkHs">{节点名}</code></td><td data-page-node-id="hR2oIArZSYl0aK8HMlEJ5I">当前步骤引用的节点名</td></tr>
+  <tr data-page-node-id="zEeqtsAXHdUY9kFCUzuKHt"><td data-page-node-id="ex9KOZE6kJzoP68Igc6dOL"><code data-page-node-id="vfBJT5C0u2pdjxA9iS40SM">{方案名}</code></td><td data-page-node-id="4IIXJwWHEM3UIu3PXqDr3m">当前方案名称</td></tr>
+  <tr data-page-node-id="vZRITwXEy7654Fpt6raPX1"><td data-page-node-id="oA68pw0tUrmt4NjMTILFJS"><code data-page-node-id="biH9Pw38THJezijHWMforF">{ocr.last}</code></td><td data-page-node-id="RLRBN9MnwqKHg8z8jhEJaI">最近一次 OCR 全文</td></tr>
+  <tr data-page-node-id="qjAfXW77sE27P9qVyCKHvs"><td data-page-node-id="kEjvEII27k1JrioflJtiBD"><code data-page-node-id="cGBimxW8AoIc2xkCafixx8">{ocr.hit}</code></td><td data-page-node-id="D2K7FoSgDlYUKQ2zxCNgBu">最近一次 OCR 是否命中</td></tr>
+  <tr data-page-node-id="vyV8F4qtGUHsqgjjNrhfkq"><td data-page-node-id="A3FpeAGAlNCL67Aw576aGB"><code data-page-node-id="ODMxSKJYD4N4veeDURrw3s">{ocr.matched}</code></td><td data-page-node-id="O2zEj9a4GjSjb3FRzlq6j8">最近命中的关键词文本</td></tr>
+  <tr data-page-node-id="E1DR0UJ3qToBW5dFOwBgrN"><td data-page-node-id="ewxMjVkT0cA51Qx7qa7LNO"><code data-page-node-id="ldSGHSDGDCBFKlZncCeuNd">{ocr.engine}</code></td><td data-page-node-id="BY7ZItIjANFIEDcpkZMVsQ">当前 OCR 引擎名</td></tr>
+  <tr data-page-node-id="FrrHWHUg4TRqWzazOBLc3O"><td data-page-node-id="XCdXe8RaLltGZlUlvAejg7"><code data-page-node-id="ZtLER2fDP3QhGX4xuk9g2D">{结果.上一步}</code></td><td data-page-node-id="A2AF2RydHYQHQCQuxsEkMG">上一个动作是否成功</td></tr>
+  <tr data-page-node-id="L1CkDGu5aMDhrJqpHxgto0"><td data-page-node-id="zVdGXZ3DLLRrsfEepFQU5l"><code data-page-node-id="wzVkO4n4A3KXb4j93yZBhT">{变量.xxx}</code></td><td data-page-node-id="OEjcpaAdOeZvUvJwFntjEc">「设置变量」动作创建的变量</td></tr>
+</table>
+<h3 data-page-node-id="dfq4etrPpWFXkbVGJNGp11">7.2 表达式语法</h3>
+<p data-page-node-id="vOCpUGiKTAHjyVbpEY7vKN">表达式用于步骤执行条件，<strong data-page-node-id="noBdta6WbiiPc6peDxyRU2">不使用 eval</strong>，安全受限。</p>
+<p data-page-node-id="zFHTRcEb4dG9hC4zd6Xozz"><strong data-page-node-id="HfDX6Cg4N97Y81ch5VR7gb">运算符</strong>：<code data-page-node-id="9z2C0ZwT2UzaYjol6BNNFd">==</code> <code data-page-node-id="GnrT5ZUiIjjAxFuALOJQd1">!=</code> <code data-page-node-id="Hpz5tPXoEhwW139hcL7aVc">&gt;</code> <code data-page-node-id="Gvf9pAZ2OtacTEOftkdGEA">&lt;</code> <code data-page-node-id="7O4nRTt3f6kt0XM9f4wf24">&gt;=</code> <code data-page-node-id="2CAgbPNMVE4rBAUr0zgAFX">&lt;=</code> <code data-page-node-id="p5llIx82TmZWHsBpdBJXjY">contains</code> <code data-page-node-id="wq2ZQvGbfTiXIutQtzsylm">matches</code> <code data-page-node-id="6XF4rrLdG2JKCMuyQgw9CW">startswith</code> <code data-page-node-id="Rtn6qfcCnrulrVqaHiDTmF">endswith</code> <code data-page-node-id="gS4Gcmzjc61sbyDU2TiGm1">and</code> <code data-page-node-id="xmEHxowwLwKF2GORuf6czj">or</code> <code data-page-node-id="fmSlVbMb0MhY6JrZc2Puv3">not</code>；支持括号分组。</p>
+<p data-page-node-id="zlJbunkqH8j1UOEfYYHHUy"><strong data-page-node-id="OkinAsF5Gfwp8pzpACIddc">matches</strong> 支持正则：右侧用 <code data-page-node-id="aEbzb14e9IOHDE12HFC24h">re:</code> 前缀。</p>
+<pre data-page-node-id="2mRQMYkW3qf7eQxwO2lgnv"><code data-page-node-id="ebs2FikG4nvC7Faw1Sgs02">{变量.已登录} == true
+{ocr.last} contains '成功'
+{轮次} &gt; 3 and {变量.停止} != true
+{ocr.last} matches 're:订单号:\s*\w+'</code></pre>
+<h3 data-page-node-id="WgOPIo5OBnDIFJyVXd1NMs">7.3 模板替换</h3>
+<p data-page-node-id="dAgMsr4MNgWK73CGGEKaw0">在「输入文本」「按键」「打开文件」「设置变量」的值中可写 <code data-page-node-id="yxk7ZSHKp8Cu2dqOAWcA9t">{变量名}</code>，执行时自动替换；未知变量原样保留，不报错。</p>
+</section>
+
+<section id="s8" data-page-node-id="Ywkjz35bAJzLg0LouBTP3X">
+<h2 data-page-node-id="U0c7RBczoowJeAmBeYcdzl">8. OCR 识别</h2>
+<h3 data-page-node-id="1vIIrJFDtv8pOHB0XLqBWE">8.1 双引擎体系</h3>
+<table data-page-node-id="IJuXUWhHPFhWp74J2maDkn">
+  <tr data-page-node-id="WVSGlH5ce48AP8HoGWRtG0"><th data-page-node-id="0aGSyYf8Kf0BeyciffSx6L">引擎</th><th data-page-node-id="m1FmWcwLOuhZu9hzqK2ZhR">依赖</th><th data-page-node-id="ntvrfbjvfJjEsn9S1cZPHE">特点</th></tr>
+  <tr data-page-node-id="8LLVrkAUy1c7XePaM3semE"><td data-page-node-id="5Tq0hLb9nGOcPxIpt8VYkj"><strong data-page-node-id="oGz5FkHOSYdEzZ5IWSvocs">RapidOCR</strong>（默认）</td><td data-page-node-id="yd4yPFUDouXDDC6HhzIN99"><code data-page-node-id="ISYMQqGmUg5dMjbgpKhCsA">rapidocr-onnxruntime</code>（已装）</td><td data-page-node-id="eaxaX3P98vTdA7G2npFpbG">PP-OCR 模型，中文准确率高，体积小</td></tr>
+  <tr data-page-node-id="c1aRKN41pOa2F8F9sQtw1D"><td data-page-node-id="PFas2jN1OSXsfj8VMQkEJm">PaddleOCR（可选）</td><td data-page-node-id="QcHkv7w02GxbBKiExk7hV5"><code data-page-node-id="5uMmfvlQbBselasoAl078G">pip install paddlepaddle paddleocr</code></td><td data-page-node-id="VL7mMyQYaSinlOXNUZQsHm">上限略高，不支持 Win7</td></tr>
+</table>
+<p data-page-node-id="lnJ5BZB2AEB6PB0o69B3jG"><code data-page-node-id="yc5s4HnLTP9crBohmFrhTU">auto</code> 模式：按 RapidOCR → PaddleOCR 自动回退。</p>
+<h3 data-page-node-id="122pR7nWT5OKwpBn3To8In">8.2 OCR 设置</h3>
+<p data-page-node-id="52DG48lKROESlqmeWEaZuY">菜单「工具 → OCR 设置」：引擎切换 / 置信度阈值（0.0~1.0）/ 调试日志 / 区域测试。</p>
+<h3 data-page-node-id="8S5G5AegSwyfVrgEM0rWH2">8.3 小区域放大</h3>
+<p data-page-node-id="Pwrz97wvF8QORT6wT5sQ50">识别区域过小时（&lt; 200px 宽或高），自动放大 1.5~2 倍再识别。</p>
+</section>
+
+<section id="s9" data-page-node-id="jeLmF9FMTXwE3wAqzKII0P">
+<h2 data-page-node-id="Rs8j6n3FoPvIwSA7esZyYy">9. 监控规则（弹窗处理）</h2>
+<h3 data-page-node-id="3QC6wQJx6RA7C0rCERERA8">9.1 工作原理</h3>
+<div class="diagram" data-page-node-id="HHkhj4onDKrewbEYxpuICt">主流程：步骤1 → 动作A → 动作B → 动作C → ...
+                              ↑
+监控线程在每个动作之间检查点触发
+命中关键词 → 执行处理节点 → 回到打断处继续（不重跑方案）</div>
+<h3 data-page-node-id="ypsW8RtxGegJ9QQPTW9xNt">9.2 创建监控规则</h3>
+<p data-page-node-id="TU0YRt8hNoVGk0KoTL7dCM">菜单「工具 → 监控规则」→ 新建：</p>
+<table data-page-node-id="prO1On4I1A0RzjZt9337PF">
+  <tr data-page-node-id="O0z2SASyqwWF5PeN05oVe6"><th data-page-node-id="AgUrYYAY5eu3X35HSUvi23">参数</th><th data-page-node-id="zWpldp2hrWHYn7HE0lhEK3">说明</th></tr>
+  <tr data-page-node-id="mZj4m4rBQ2TKtLWv1GGREF"><td data-page-node-id="skNphYbJad90HT41JoVdoK">区域</td><td data-page-node-id="M6QkXDrrYiFTucEejnXWmE">OCR 监控的屏幕区域（可用追踪取区域）</td></tr>
+  <tr data-page-node-id="GyROxxVbURLp8mLbBKtxvd"><td data-page-node-id="8il6SLm7bq6bFLMrkwOBD9">关键词</td><td data-page-node-id="dZnVJ4MADNn9EjAdyaZlD2">逗号分隔，支持 <code data-page-node-id="zTEq46iPPSkSoRkz2vOzIG">re:</code> 正则前缀</td></tr>
+  <tr data-page-node-id="ytAdxpSGg5qpqtiTuBHgxF"><td data-page-node-id="pOdWkFey8mObd0DaGQpoLl">检测间隔</td><td data-page-node-id="AsRzRjFvZqciFluhUib0wT">默认 1.0 秒</td></tr>
+  <tr data-page-node-id="HS5JhprfzHWBdMYVGAmFLN"><td data-page-node-id="gTQq80FmSGsLMg5nwfOKF9">冷却时间</td><td data-page-node-id="GU5PN26yK4LWXfNrEzyctY">触发后多少秒内不重复触发</td></tr>
+  <tr data-page-node-id="nLFvYEdGCP9aMaG2eRb21x"><td data-page-node-id="8pT5OWNko5shN39drjS01s">处理类型</td><td data-page-node-id="bk0rcyTDVGfcGWBFzvblAe"><code data-page-node-id="2qzPehGmJYRARWA9r9PRIl">执行节点</code> 或 <code data-page-node-id="8l5BYxRpEz3jpvFZJQ1qdZ">终止方案</code></td></tr>
+  <tr data-page-node-id="jJymzVNwiveHhNR3zMADJb"><td data-page-node-id="bJBq5p0GEMJRs7hnBF9hMs">处理节点</td><td data-page-node-id="ZXNXmPbxvhFrDMLmUgl8M4">命中后执行的节点名</td></tr>
+</table>
+<h3 data-page-node-id="JmG0l4DstXneoBt3Nwp5He">9.3 调试技巧</h3>
+<ol data-page-node-id="mLQUQmPpJHCXLsl2y7p6gT">
+  <li data-page-node-id="RrGc8dLcP37mU6h7rOQiHj">打开「OCR 调试日志」，查看 <code data-page-node-id="XeM5JHvWhvc2FfLitmuWUr">🔍 [规则名] OCR: ...</code> 识别内容</li>
+  <li data-page-node-id="5NWg3uEPGEQdk0AR2AriOn">添加 <code data-page-node-id="eA7JARROsXPruWtjehqDi0">ocr_check</code> 动作存变量并截图，确认区域是否正确</li>
+  <li data-page-node-id="3eWHW28fzFMJGkdaC8ydkV">触发过于频繁时增大冷却时间</li>
+</ol>
+</section>
+
+<section id="s10" data-page-node-id="XFhY3qCPYKNBl8n9uudoJ1">
+<h2 data-page-node-id="F6WxViEb8JiCpM5iD9aPPp">10. 定时调度（Cron）</h2>
+<h3 data-page-node-id="oYoIsLMJU3FmEGJtueEBGk">10.1 创建调度</h3>
+<p data-page-node-id="UYlzr81VkrhEYb9em69dGI">菜单「工具 → 定时调度」→ 新建。调度包含：Cron 表达式（7 字段：秒 分 时 日 月 周 年）、启动延迟、关联方案、调度名称。</p>
+<h3 data-page-node-id="ibnFjV1IpNdnRDHKx4jzJY">10.2 Cron 表达式速查</h3>
+<table data-page-node-id="nTOXpQzlB4bBf9ZCWkfFH3">
+  <tr data-page-node-id="bUfCENTeRHeehrslNRVjHt"><th data-page-node-id="kIAphNkfJVlOb3cQShzRkA">字段</th><th data-page-node-id="lMoYVr4CJKoWX1cZPJ0cVB">示例</th><th data-page-node-id="9xwts0C53JTy6kntjZkpRJ">含义</th></tr>
+  <tr data-page-node-id="lN6GDYh4XKt0ajYSaJMJfU"><td data-page-node-id="2CJ6Z8kxQN9F7SfdsmUR9O">秒</td><td data-page-node-id="h3POEkLLZMaeOMFFHygaeE"><code data-page-node-id="QJLm5JGlyQTd3PAHBPoeVh">0</code></td><td data-page-node-id="AYGiYdLJBc9wtXRxnKAZ7o">每分钟的第 0 秒</td></tr>
+  <tr data-page-node-id="MxcNtWJIkrkoOvXdHZgQtY"><td data-page-node-id="DdGE9ZuNOA10OBwR35OvnE">分</td><td data-page-node-id="INfYU8lQwmmHUB6Xw22hsL"><code data-page-node-id="YC4d4ema6ZEWDP70RFsmXI">*/5</code></td><td data-page-node-id="YHNCYINr4hTiieQa1eCtsD">每 5 分钟</td></tr>
+  <tr data-page-node-id="yEWXXqQujedQaH6VLyC97g"><td data-page-node-id="MgETIs2U1jqHbaPy1IsJp9">时</td><td data-page-node-id="AJsvoNAvtFhHp0pFsYVy82"><code data-page-node-id="ZySMNmBAQLi4iicoDGFtso">9-18</code></td><td data-page-node-id="h9Hzl33UnX2FNtYMDsV3oI">9点到18点</td></tr>
+  <tr data-page-node-id="HhCEA062uOzhtpYiIwqxwz"><td data-page-node-id="XcrAS9HdHTqYuUg0vgc4Zm">日</td><td data-page-node-id="xH4mXEaTyCWqY196gVhRLd"><code data-page-node-id="iTRVX27ENmNLHBikl1yOK1">L</code></td><td data-page-node-id="AkjAnGTHyifhN77L3oTTJa">每月最后一天</td></tr>
+  <tr data-page-node-id="qEu13tP97XXku48W4UHEav"><td data-page-node-id="qUtWpUzcr9FRgbBtjrOqeE">周</td><td data-page-node-id="C2LNuZjdjIM4CvvsPobC2G"><code data-page-node-id="HRrsdKlh7YDhKhphNJ2DQr">1-5</code></td><td data-page-node-id="5dUZpbNy74gvGrd1gXMUAE">周一到周五</td></tr>
+</table>
+<h3 data-page-node-id="TOnnwQAY80Bl3URPlncwJY">10.3 高级语法</h3>
+<table data-page-node-id="7TrnhR1b1I4iq1pwYt5ghS">
+  <tr data-page-node-id="VziQ325Q9JWyutTigLAsmm"><th data-page-node-id="nMgWMnEK0SA3pVdlygA70D">语法</th><th data-page-node-id="p0gLip28zDfzbaAyyq3rvs">示例</th><th data-page-node-id="IoNzlG7x5Vn4ynjgdgckwE">含义</th></tr>
+  <tr data-page-node-id="ZmpjrYsBMFa9souRWM5x35"><td data-page-node-id="vj5LlnQl5hh9uOZj4Nyflf"><code data-page-node-id="SYzI5IiyEAy7Ew5dJbFnYN">,</code></td><td data-page-node-id="JQTTs0MFIASGRjd1Lp2zDH"><code data-page-node-id="CjiMrHFYDln4TDrQFUMF2a">0,30 * * * *</code></td><td data-page-node-id="TRt78Pk49XEgxtOU0ZD6vT">每小时的第 0 和 30 秒</td></tr>
+  <tr data-page-node-id="Jhry4fB4kstfFCnvrh5ukE"><td data-page-node-id="8OJNP9VFLaxlWaJzpxbiFZ"><code data-page-node-id="E0L2H3eeMCjG24oM9wZr4d">L</code></td><td data-page-node-id="sZF8n5K12cBCWliIIhenNV"><code data-page-node-id="erjbxBIHZGQfLiYMxTMkjC">0 0 L * *</code></td><td data-page-node-id="5peS9EGcZRRY9KVGUHc9Dr">每月最后一天 0 时 0 分</td></tr>
+  <tr data-page-node-id="Z22Qq3BzwX0PrXxwXxQ8qA"><td data-page-node-id="CTT7XDBhMVshnYlmWKw8pL"><code data-page-node-id="cEw2mszS2JNYfCBlnFgK2p">W</code></td><td data-page-node-id="HA2JlDKA9jnu8OSzwWDkb6"><code data-page-node-id="W11JGk0nTss7A2dhKyr9Gk">0 0 15W * *</code></td><td data-page-node-id="qhgvPnhw76wJFBAHkCkJuZ">每月最接近 15 号的工作日</td></tr>
+  <tr data-page-node-id="5bVkZYrO0AwvpfT16uqM6z"><td data-page-node-id="duzlP8gMaVb9r0qsNGVAXM"><code data-page-node-id="isGCmRokmoBhRzPQk1WL3Q">NwD</code></td><td data-page-node-id="BLRXxUfWogr5kFhILdEwdb"><code data-page-node-id="UP6tFWwt4DNLKQ4Uauxujs">0 0 15NwD * *</code></td><td data-page-node-id="KBdHF7MGNs9OcBT9PmHrT2">每月第 15 个工作日</td></tr>
+  <tr data-page-node-id="Z1f0UnwK7vTpohttmYu714"><td data-page-node-id="nbnZXqcLqgbcMFcZetBnBo"><code data-page-node-id="rkFRVuim0efAh8NCC1G81I">#N</code></td><td data-page-node-id="6hoxMz86FRXS1HufQBBZvr"><code data-page-node-id="wXfE7Pi1KfKwLjLByDSKLE">0 0 * * 6#2</code></td><td data-page-node-id="H4afXZ2Tc7R3UZNP1h6hNJ">每月第二个周六</td></tr>
+</table>
+<h3 data-page-node-id="SUSjJ2TkytHwwdpLZxtNXe">10.4 运行状态</h3>
+<ul data-page-node-id="SOCHC2mXrKuHzJAJqOqJ3c">
+  <li data-page-node-id="Rkj60wd6QOijASmh9QxGOK">调度器精确等待下次触发时刻（非轮询），到达自动运行关联方案。</li>
+  <li data-page-node-id="Va72YogdFRN8JVpvYr5VW6">编辑时右侧显示未来 12~48 个触发时间预览。</li>
+  <li data-page-node-id="SsSjNUv53XaNn3iD8lCUBo">主窗口关闭后调度继续运行（托盘模式下）。</li>
+</ul>
+</section>
+
+<!-- ===================== 11. 热键 ===================== -->
+<section id="s11" data-page-node-id="sTY1o09HSNEWHyW3JBaufr">
+<h2 data-page-node-id="crprgf7mxBH3cUPp7W6U13">11. 热键</h2>
+<h3 data-page-node-id="3P67LDeS7qEvdyRkvEvEz9">11.1 主程序热键（默认）</h3>
+<table data-page-node-id="H5FdmENoEM9xM0su3XiKS4">
+  <tr data-page-node-id="PkhiMEhaqNznsboWn2JvXK"><th data-page-node-id="WeY8lDx8kufgY5FpRrUGlO">功能</th><th data-page-node-id="DheoEZmdRjjGdD276JqKQE">默认</th></tr>
+  <tr data-page-node-id="B8rOwxBuy368cZ92KJ5Unj"><td data-page-node-id="kUghUYKBvn5DrubKT4aPGt">开始运行 / 从暂停继续</td><td data-page-node-id="EAEk8uPEii539X7IGV1gIU"><kbd data-page-node-id="B69IHcbE7geGQfcNqOYZMB">Ctrl</kbd>+<kbd data-page-node-id="fVFcthyvW4TEcFhMaG4pev">Shift</kbd>+<kbd data-page-node-id="PCwKAdWAGJxY2yVKRZky6p">S</kbd></td></tr>
+  <tr data-page-node-id="ozvTTOmTrPjGcqsTbDz0oP"><td data-page-node-id="KovO3eJRid34cgofTA0NWs">暂停 / 恢复</td><td data-page-node-id="lqBMVjGvWBkJx0fRrHx1y0"><kbd data-page-node-id="uNv1XCbsY1Pd8XCbKoFvS7">Ctrl</kbd>+<kbd data-page-node-id="sJcnz0SNv8bBzPV4ZzhCdu">Shift</kbd>+<kbd data-page-node-id="efaIV1u89EvCJrX0GYtgSc">P</kbd></td></tr>
+  <tr data-page-node-id="8MuH4rT3C82ZQNSVMhmYL2"><td data-page-node-id="WoXE9usXG8f83bn7OjdTIr">停止</td><td data-page-node-id="efxH1VNvTEYS3goxTXpPNT"><kbd data-page-node-id="jSHvEcIeJPuqGKmjzFTdPb">Ctrl</kbd>+<kbd data-page-node-id="FzmpBchWXRTVs8Iztz9pTx">Shift</kbd>+<kbd data-page-node-id="FY3VNtpidUoqJljIxlGPKc">Q</kbd></td></tr>
+  <tr data-page-node-id="qsdov93VRyHEOFwcryAApM"><td data-page-node-id="9vwjA1kX5d3aYreOXLHVCC">坐标追踪（起点/区域）</td><td data-page-node-id="vcUnSGtxJBTvYBUtadP1ZD"><kbd data-page-node-id="K5kQmKV0Dog2bBYLGYvrFS">Ctrl</kbd>+<kbd data-page-node-id="ptj5xRoOWbHEcnauKS0FdE">Shift</kbd>+<kbd data-page-node-id="KCypKGQ4KbJT0GQM5j8tHf">C</kbd></td></tr>
+  <tr data-page-node-id="kxZBfhqdrOZpWEIHU4TsTD"><td data-page-node-id="GTgouPWZa3Ke1XT1QmC0VJ">坐标追踪（终点/拖动结束点）</td><td data-page-node-id="GiAk3yGHGZwNDYa8JHP12Z"><kbd data-page-node-id="nN8nRtLHexMqp0HWGqvIwC">Ctrl</kbd>+<kbd data-page-node-id="r803y7PZ9K5OFRxalmY2mG">Shift</kbd>+<kbd data-page-node-id="aoZa71OYbMJWtoJHBMWvck">X</kbd></td></tr>
+</table>
+<h3 data-page-node-id="Zkwg4lcwZCA9YIYzrWQZVu">11.2 可视化热键（默认）</h3>
+<table data-page-node-id="zXspCz7aVre9dg8qqyG6Qi">
+  <tr data-page-node-id="kqWLHBTOVTJHTl2HHFcEla"><th data-page-node-id="xvb8320eB22Hf3N5jTxO36">功能</th><th data-page-node-id="GEUbhWz1np36avywoyNEFb">默认</th></tr>
+  <tr data-page-node-id="y9yyCQD3sXLP97WutBVEWn"><td data-page-node-id="H6DVntXQAjmda1ulBLCLvU">切换鼠标高亮</td><td data-page-node-id="O0wieBXvhK5CcpfybkKf8Q"><kbd data-page-node-id="rCoGar2CPo2k9qNaFd7pFL">Ctrl</kbd>+<kbd data-page-node-id="wSKlnYhx7iGlo0qZDvejGD">Shift</kbd>+<kbd data-page-node-id="LuFSCMgWQuenLEpR17bGtd">1</kbd></td></tr>
+  <tr data-page-node-id="CHrCEMVPkOLMgfkkQmr12X"><td data-page-node-id="JfH4YK27LJVFMDwB8dV5P9">切换点击效果</td><td data-page-node-id="AjT8kvc5kyyNC5HlMpwCXD"><kbd data-page-node-id="l1kPHVJ4eXUwXT9f5cqWSN">Ctrl</kbd>+<kbd data-page-node-id="2p0qGUPrc5HuGl1re38Hj1">Shift</kbd>+<kbd data-page-node-id="oKGEle9n1JHJsyksh34yGD">2</kbd></td></tr>
+  <tr data-page-node-id="5HyDMf3W1VVYruWQGtYCgN"><td data-page-node-id="IepcFDGDqGFnXBCtrNBXit">切换按键显示</td><td data-page-node-id="duHqF51wgR32YryvRwEx7R"><kbd data-page-node-id="r7fqOAoPCIGhyLtVEKsIWv">Ctrl</kbd>+<kbd data-page-node-id="CTLEgSWv0eYFAyQFU9f7Fb">Shift</kbd>+<kbd data-page-node-id="k9W9JCkyzx1Xs2E80NTTv8">3</kbd></td></tr>
+  <tr data-page-node-id="mgz61QXe3QTb9YsLlsxFBN"><td data-page-node-id="RMw4GDM5RCoSguoS9cAD10">切换鼠标坐标</td><td data-page-node-id="FTugqkPYV8ELb7ZFIF2Z4J"><kbd data-page-node-id="Ig0v9DipV6d8iuT7ED58EL">Ctrl</kbd>+<kbd data-page-node-id="2VwwhD2HIqWOIBMAH6ispU">Shift</kbd>+<kbd data-page-node-id="h0ExJ5pA15XPlKEN6YGZBL">4</kbd></td></tr>
+  <tr data-page-node-id="L7KhWyF5SNCqYl2wcddbVV"><td data-page-node-id="h1h77Hws4xMGSusuUYHYJl">切换聚光灯</td><td data-page-node-id="FEch4b1w3kbL4UdLCd1BXp"><kbd data-page-node-id="BLqra97ZBrNZMBx9zIWFXC">Ctrl</kbd>+<kbd data-page-node-id="8NOXLyf05J56H6BxvBjBTa">Shift</kbd>+<kbd data-page-node-id="Vvf46CkQp5ovFcVAd7Wouw">5</kbd></td></tr>
+  <tr data-page-node-id="bl7N63oqtZMbLAG9rnHsqY"><td data-page-node-id="sHK4DvPl2WfE6JWx82i2aO">切换放大镜</td><td data-page-node-id="tgDmuCgeopwgo9euCwb28D"><kbd data-page-node-id="btKaWd3OKBf0oi7dmJ7mcn">Ctrl</kbd>+<kbd data-page-node-id="s7XNRbwwknotteG4MA6xBd">Shift</kbd>+<kbd data-page-node-id="xGtJtNCEtvMXUCJDp7aiQy">6</kbd></td></tr>
+  <tr data-page-node-id="iPpWOetvcqhF5hRqayNers"><td data-page-node-id="Fz7c7ICgNfALcQfZ4j2B8v">切换浮动工具栏</td><td data-page-node-id="YTOFudKnkM1wORV5Nk6MVj"><kbd data-page-node-id="EIdOIW8b3buRB8UfG8FAIh">Ctrl</kbd>+<kbd data-page-node-id="W2IkAs4GDP4Zd2cfdqAILT">Shift</kbd>+<kbd data-page-node-id="KT7amvKuRJTtINXVGH3edy">`</kbd></td></tr>
+  <tr data-page-node-id="J1vFDmgzpdm3987cGwIrK0"><td data-page-node-id="F508JFPjvAl63q2UkhSCkN">调整透明度 − / +</td><td data-page-node-id="Ebx9IOjhXmygvVMcsdQLeL"><kbd data-page-node-id="9S1PIaDaFYFsjeAVFb4C5H">Ctrl</kbd>+<kbd data-page-node-id="aqKNwYJkIkoeaaGXYM99AK">Shift</kbd>+<kbd data-page-node-id="lIJeiKMVjyBjgi8GIHxKze">-</kbd> / <kbd data-page-node-id="aZlxigvmNCRoeQp2PnF0E9">=</kbd></td></tr>
+  <tr data-page-node-id="8HjQ9KjiJXvAslr60KSoMW"><td data-page-node-id="HwFcmbQnGjkEkfvsK2MWhL">打开可视化设置</td><td data-page-node-id="DszhfWHtvkFFva2EvM1AEw"><kbd data-page-node-id="KRm4DmE1FCi5f4qeDVGBB3">Ctrl</kbd>+<kbd data-page-node-id="GhublDrhSHCMybC9XIhRcU">Shift</kbd>+<kbd data-page-node-id="soDSqj8i6j28lqPGZljqUM">F1</kbd></td></tr>
+</table>
+<h3 data-page-node-id="gD3pj6UJW9ANu18E0Ofp0x">11.3 修改热键（手工输入）</h3>
+<p data-page-node-id="7McKAE1AUfnLcBSvJQzYFQ">菜单「工具 → 热键设置」，对话框内分<strong data-page-node-id="p1BugNXDP8I5jNF5ZstzGd">主程序</strong>与<strong data-page-node-id="WjpZVxg1I3Kvf20A4HM9Fi">可视化</strong>两个分组：</p>
+<ul data-page-node-id="lWzTHuc4JlKZB6XjvoDtG4">
+  <li data-page-node-id="vyupkQa7MblnhnTae0VF5r"><strong data-page-node-id="G8T3fn82Tii5ChSUM6E5AX">直接键入</strong>组合键（如 <code data-page-node-id="ArpgSVP8ADIf6GhiqtE6B2">ctrl+shift+s</code>），无需录制。</li>
+  <li data-page-node-id="eNF7ehQHjNUJfFrEfmVnL9">保存时自动<strong data-page-node-id="0aZf2l95fO9sSh5wkaCtHc">归一化校验</strong>：小写化、修饰键别名归一、分隔符统一 <code data-page-node-id="w2M1avkZctrGwvKlZEi2fc">+</code>、去重；非法格式红字提示。</li>
+  <li data-page-node-id="4rSJ53FEvEiWK2XXmjH5EG">「<strong data-page-node-id="kxWTCGXPY9hAUm3G9N5r7b">恢复默认</strong>」一键回填。</li>
+  <li data-page-node-id="ClHRRnIctRM2CDQLIuKu4E">保存后<strong data-page-node-id="AQvdJzoXD0D1eKgIHADIT0">立即重新注册生效</strong>，无需重启。</li>
+</ul>
+<h3 data-page-node-id="cXGvjFjYdsc6EZtV2FFrw0">11.4 追踪热键详解</h3>
+<p data-page-node-id="2TWom0QAwn0tGso9S2Suee"><kbd data-page-node-id="f5GhzBEDjLBWwVBxnz1Wdy">Ctrl</kbd>+<kbd data-page-node-id="vMeL1wy3EnZDlkYtv619OL">Shift</kbd>+<kbd data-page-node-id="C3nBmDkPpYuPDXIgoiHwF9">C</kbd> 是<strong data-page-node-id="F4s31dpagrhWrnXyKxRhFF">三阶段</strong>追踪：①开始追踪左上角 ②切换追踪右下角 ③锁定坐标。适用于动作编辑坐标、步骤 OCR 条件区域、监控规则区域、OCR 设置测试区域。<kbd data-page-node-id="QpLOTR6NC1gKmaxisrVDht">Ctrl</kbd>+<kbd data-page-node-id="Od7A7hBPj1ErloTd9iCzkA">Shift</kbd>+<kbd data-page-node-id="Ha3xpwHyltea4nldWnIjA7">X</kbd> 仅用于<strong data-page-node-id="CYuDGCKq2W9dyGEOcmOIZ7">拖动动作的终点</strong>。</p>
+</section>
+
+<!-- ===================== 12~14 ===================== -->
+<section id="s12" data-page-node-id="rJdUNmJMdk0UR5AbPhiG8U">
+<h2 data-page-node-id="bdCRsXjh9qhPlYU0qnFwvt">12. 密码管理</h2>
+<p data-page-node-id="KtGKJSqA9QATocnjzGyZJl">菜单「工具 → 密码管理」：</p>
+<ul data-page-node-id="BqMJzhyuAwUG1xlrUxo3Xl">
+  <li data-page-node-id="NPp2Kg20lUIL8vG20HuprN"><strong data-page-node-id="CxoCYl2aE2RiBXRMOSoxqM">添加</strong>：输入名称和明文密码 → 加密存储到 <code data-page-node-id="piBeg4P7kBn5xvvoWSiIka">userdata/passwords.db</code></li>
+  <li data-page-node-id="aGoxgXZ6LNevZupHb0UXPp"><strong data-page-node-id="3dpei3n1KdNuSGaJfRxlKz">编辑/删除</strong>：右键管理已有条目</li>
+  <li data-page-node-id="V7WOUpgz0wBxs5TQZ8OD66"><strong data-page-node-id="5fU9QyXVykByB3tyiFHblS">在动作中使用</strong>：输入文本动作 → 点击"密码库…" → 选择条目</li>
+</ul>
+<p data-page-node-id="JZcpGLZS3sRu6FDlKaPPwf">执行时自动：①取明文 ②粘贴 ③清空剪贴板 ④日志打码 <code data-page-node-id="FV8QYRmatbGog4MSPYIHfF">*****</code>。</p>
+</section>
+
+<section id="s13" data-page-node-id="p7g1sDAEF9dz4mkSESUdmW">
+<h2 data-page-node-id="XgYdJLpaVuwCM9HuKrVtYF">13. 坐标追踪</h2>
+<h3 data-page-node-id="NILg9HNpwvwrQTqOSIfv4A">13.1 追踪区域（Ctrl+Shift+C）</h3>
+<p data-page-node-id="kmS5aLDkuSvU1seDSWr2La">适用于动作左上角/右下角、步骤 OCR 条件区域、监控规则区域、OCR 测试区域。三阶段：锁定左上角 → 锁定右下角 → 已锁定，按钮文字实时显示阶段。</p>
+<h3 data-page-node-id="hu1Jxq4MxCvhp9krvy16Cx">13.2 追踪终点（Ctrl+Shift+X）</h3>
+<p data-page-node-id="xn3Ci7bEiujsoEcQidmafF">用于拖动动作的终点，起点不受影响。两个按钮独立追踪，互不干扰。</p>
+</section>
+
+<section id="s14" data-page-node-id="YSySzLHZEWKWuYMnqxDcfx">
+<h2 data-page-node-id="q643B2NfHG52TiYZA918sB">14. 数据管理：新建 / 复制 / 重命名 / 删除</h2>
+<h3 data-page-node-id="rntpdpz9DTw2G8ojY7MX8Q">14.1 新建</h3>
+<table data-page-node-id="M0uHI3HF1G70Tg5OH00uZS">
+  <tr data-page-node-id="XIKThGANe8SHQpN7k1I4E1"><th data-page-node-id="qdywhsU2nJL20jHLafGqhg">对象</th><th data-page-node-id="SUYd3J28z09lu1R6Xw6oDg">路径</th><th data-page-node-id="AR3lSn6A1LMrdHp9hGKwlr">ID</th></tr>
+  <tr data-page-node-id="1Ovlj5n1hta7jsMzRrcQBR"><td data-page-node-id="YWGB6ZIE9o8ED6GYu1uL8C">动作</td><td data-page-node-id="l1HQddTuW3hYfUOvEhqRks"><code data-page-node-id="n1zkpewr9XBKlmR8MsRVGM">userdata/actions/&lt;名&gt;.json</code></td><td data-page-node-id="9brReqoc2Uk7ZirMtmy7ZE">自动生成 action_id</td></tr>
+  <tr data-page-node-id="YmUQXSlcacJLE8oK5pFBz3"><td data-page-node-id="estjTSUDanJoMb9DIsy7PA">节点</td><td data-page-node-id="M3QjVXeON6KV9RLmQThcFk"><code data-page-node-id="5DTLMeaUgr4R0WBJdeeqM5">userdata/nodes/&lt;名&gt;.json</code></td><td data-page-node-id="tAywWAD3rhNNTpwUFWZ45c">自动生成 node_id</td></tr>
+  <tr data-page-node-id="vG7aYuYFWyDTgO56BmOIHL"><td data-page-node-id="LexucYPjdg1BtxWblbIOxs">方案</td><td data-page-node-id="ctOXB9CgozxhHAEJmBEiMs"><code data-page-node-id="GNUvAxgcziQfIkEt6uiP5s">userdata/plans/&lt;名&gt;.json</code></td><td data-page-node-id="XCqiO0jiSj8taoVwu7Apu8">自动生成 plan_id</td></tr>
+</table>
+<h3 data-page-node-id="skZLqTjTxDTslVHxxRbcQy">14.2 复制规则</h3>
+<table data-page-node-id="OySeiGavDHPy7D7dBEBcwo">
+  <tr data-page-node-id="8G8yhhLeptN47pEvpA6Stn"><th data-page-node-id="T8yKNd7dHtoTqlcqbf7rPh">复制对象</th><th data-page-node-id="XyiLxPToXP50YN9ECsify6">新 ID</th><th data-page-node-id="8FPtjD7Dl3oliTzqW1d4P2">复制行为</th></tr>
+  <tr data-page-node-id="qHiEkDNbHzGXENWJpkjIGu"><td data-page-node-id="I3qGvqDNLDG6Vr9GlEqFDT">动作</td><td data-page-node-id="g7e02WctpQIbrYPWtOxPuf"><strong data-page-node-id="NxDRlQ3BSXF4yK0ylUFn9b">新</strong> action_id</td><td data-page-node-id="wcCWKRtxiPfgaKqGVSQbls">完整复制所有字段（名称需修改）</td></tr>
+  <tr data-page-node-id="Ewx8XaTj26DGsNLikEZO5i"><td data-page-node-id="A8OunuW7OShEuwaYfBopKm">节点</td><td data-page-node-id="IBquRChG8ZKW6gidcs51Te"><strong data-page-node-id="FG4QhmabZluYRSgr92H2Y0">新</strong> node_id</td><td data-page-node-id="Ho0eWUVgzbiq9gvwBHKrtO">内联动作保留原 action_id；共享动作引用保留原 ID，复制后可立即使用</td></tr>
+  <tr data-page-node-id="MDGuyG321mnSyhkoNcAQT2"><td data-page-node-id="YSfMO9pEk5eY1OkxOzj9mX">方案</td><td data-page-node-id="O3VzoBeK5ZgXeP6d1TIcDu"><strong data-page-node-id="Jk1Swf4m5fZ0MUEJFFxp0E">新</strong> plan_id</td><td data-page-node-id="TI3ObeCp5uzkCXIADz7JlF">复制所有步骤和监控规则</td></tr>
+</table>
+<h3 data-page-node-id="Gdxv6KecHaCWmS07ftXvJw">14.3 重命名与删除</h3>
+<ul data-page-node-id="gDB57uXiPQTxg833i1m1Iz">
+  <li data-page-node-id="WyCTUUJPt1VY68JZFibjZ9"><strong data-page-node-id="rVl0cA1jE1ZRhsIhdMTmR8">节点重命名</strong>：自动同步所有引用它的方案步骤（按 ID 与名称双匹配）及监控规则引用。</li>
+  <li data-page-node-id="XUZvgsgfNIPVKyppplVrCz"><strong data-page-node-id="B0EEfKXKC2BiSj1Ze9Vh62">动作重命名</strong>：旧文件自动删除，新名称文件写入。</li>
+  <li data-page-node-id="3o3olBgv9XUHrRVFees1Yl"><strong data-page-node-id="7thVMSIXZDC992w8iimPQv">删除</strong>：被引用的对象会列出受影响者并要求确认；方案删除不影响节点和动作文件。</li>
+</ul>
+<h3 data-page-node-id="G6zLY4kiPUH7OW5EMtS06a">14.4 列设置</h3>
+<p data-page-node-id="EBxPFZh8CyVf2FRawS0htA">所有表格支持右键 →「列设置…」：显示/隐藏列、拖拽调整列宽，自动保存。</p>
+</section>
+
+<!-- ===================== 15. 效果叠加 ===================== -->
+<section id="s15" data-page-node-id="BLTZOcewBc7HsNcc9fDNU1">
+<h2 data-page-node-id="ZkaW7fhbGfgDti1NDGbM8i">15. 效果叠加（执行回显）</h2>
+<p data-page-node-id="LqspitoGiWEMpnGrWlO5tj">菜单「设置 → 效果设置」。运行方案时在主窗口上方叠加半透明视觉效果，<strong data-page-node-id="5DJXngNkPshgb1sxEaalNE">由执行引擎触发</strong>：</p>
+<table data-page-node-id="fn3BQ2dY4RDlUSSKlsVdGF">
+  <tr data-page-node-id="ymtaTj4cqbUoMBXOZD4ZLH"><th data-page-node-id="Fk3kT383FVddGy7sMgqQTM">效果</th><th data-page-node-id="xUZ84rX0YAPcEY76JwXQsA">说明</th></tr>
+  <tr data-page-node-id="fGyFoz59iUZI0ooArCM8x3"><td data-page-node-id="L4Cm8jJAR7i6VEoj85haEe">点击波纹 / 光晕</td><td data-page-node-id="NqR1zvjeklDAizW8Q4itJG">方案点击时显示扩散波纹或光晕</td></tr>
+  <tr data-page-node-id="Qnc8FnaG5GKosvQaUvTDIg"><td data-page-node-id="5BJYAQSHrgBfOxQbHA8Z5P">OCR 十字线</td><td data-page-node-id="4hYFzcU0mJ4ACY0rnO9fGp">OCR 识别区域绘制十字准星</td></tr>
+  <tr data-page-node-id="dbXfBkjWny33IqnYGBGJAw"><td data-page-node-id="4VVesWHwr7Y95axOxcViLj">键盘文字</td><td data-page-node-id="q8DAATmY97hpcKlEGmSJWl">方案输入的文本浮窗显示</td></tr>
+</table>
+<p data-page-node-id="xDz6uwVNfh1fzOApuFkLoz">可独立开关每种效果，调整颜色（Hex）与尺寸参数。</p>
+<div class="callout warn" data-page-node-id="RnKXIvFUzye28tN2WS6Hkm">
+  <strong data-page-node-id="sAanpRoUUapnKBN3EnbHBm">⚠ 与「实时可视化」的区别</strong>
+  效果叠加只在<strong data-page-node-id="DxS8U6MchoE5j11rClftK2">方案执行时</strong>由引擎触发；实时可视化（下一章）<strong data-page-node-id="ThtNgi0iLHWnSeqASZbd9W">实时监听你真实的键鼠操作</strong>。两者相互独立、可同时使用。
+</div>
+</section>
+
+<!-- ===================== 16. 实时可视化 ===================== -->
+<section id="s16" data-page-node-id="CR7diHoFjFgoCidt91uTC1">
+<h2 data-page-node-id="YLDJvaVjxQZknV97e99X9J">16. 实时可视化（键鼠可视化）</h2>
+<p data-page-node-id="JUqnywAkT9NfvzbTvIB9cJ">由独立工具 KeyMouseViz <strong data-page-node-id="OHK1RB97WyiTVrIRf6ewmE">有机融合</strong>而来的内置模块（<code data-page-node-id="8M6DKcmICi2UIpuqSaFpxs">rpa/viz.py</code>），随主程序启动常驻、随主程序退出关闭，无需管理员权限，支持高 DPI / 多显示器。</p>
+
+<h3 data-page-node-id="v9NTQHjFqRrYGVweSkYN3P">16.1 功能概览</h3>
+<table data-page-node-id="G1RbDCwct2egx8AJDFPTgh">
+  <tr data-page-node-id="wzWrk0CaKRsC10bjuAVRad"><th data-page-node-id="yI11B4CZOQhCoOULLTYRJd">功能</th><th data-page-node-id="hc26Mtqpcurw0j9dgxcof1">说明</th></tr>
+  <tr data-page-node-id="ROCA2lTK1v6ba0mLyuTbJB"><td data-page-node-id="gU09eWBX94eS47fTwMBbBj"><strong data-page-node-id="pGtbIcxnsweljz4oLQVPOT">鼠标高亮</strong></td><td data-page-node-id="yy2PrUC51lqitNFN0X5Mb3">突出显示鼠标位置，演示/录屏时观众看得清</td></tr>
+  <tr data-page-node-id="8RFooHWrNCh9aHGAz7ojkw"><td data-page-node-id="BnVNcIoYW8ADEmEqBA2arj"><strong data-page-node-id="XpLEiEzSydTszUIEG7hHWV">点击效果</strong></td><td data-page-node-id="CKECxVmdSF2sH9S0gXEACN">真实点击时显示涟漪/光晕动画（左右键、双击可分别设置）</td></tr>
+  <tr data-page-node-id="svDC7E8C56cCcqWyf9WnAc"><td data-page-node-id="WhD3lshmDkFGhcQEZSRnlb"><strong data-page-node-id="F1SLndR32Pd6PyroGDtKwC">按键显示</strong></td><td data-page-node-id="shfAV961QZejK1fIaTe1RB">实时显示按下的键（支持组合键、只显示组合键模式）</td></tr>
+  <tr data-page-node-id="SjNisZVNrsBR0FBCINLUFP"><td data-page-node-id="tpAW64x5NzRTEljRpFqRiZ"><strong data-page-node-id="XDGh3JrVIpbEhQaT6s8AyO">鼠标坐标</strong></td><td data-page-node-id="EpAurS0qG27bYKCeFIGnlV">屏幕角落实时显示鼠标物理坐标（字号/位置/亚像素可调）</td></tr>
+  <tr data-page-node-id="Z1ncPx1HlKpmgnHhbIpMnB"><td data-page-node-id="f3qVpJ1NlawkFqDMrXRLPF"><strong data-page-node-id="FpJM2u50ZCSBqAhMLFL35A">聚光灯</strong></td><td data-page-node-id="SD39EPTZHyf4CXB2w0XmRc">鼠标周围高亮、四周压暗</td></tr>
+  <tr data-page-node-id="tSmpwQjmk1J7yaJYIrpZEI"><td data-page-node-id="5gxPCcSCuhHQHcAv8Ojbdx"><strong data-page-node-id="YtSORMgi7IFgRQkz4TP0uH">放大镜</strong></td><td data-page-node-id="yvv3Igpg6V5DzP138H9qIr">实时放大镜（圆形/方形、倍率、大小可调）</td></tr>
+  <tr data-page-node-id="1cSuGs0vxmEjuoGCCVW6Hq"><td data-page-node-id="Z4G5a8ZYsM4NASxjE0nnMB"><strong data-page-node-id="vsM815DkIPSIOZsqveEw3u">浮动工具栏</strong></td><td data-page-node-id="fQZFZEf94MbXRRcMtMn9IH">屏幕悬浮工具条，一键开关上述各项</td></tr>
+</table>
+<p data-page-node-id="qlgmtjtoE6fSGS2B8MZeGt"><strong data-page-node-id="Zbp1T8IAoh2M6hQhB8ORal">默认全部关闭</strong>，随程序启动常驻待命，按需开启。</p>
+
+<h3 data-page-node-id="UV4h5OcYnWx6ypiqLCfvD1">16.2 开启方式（四处入口，状态实时同步）</h3>
+<ol data-page-node-id="l0kUZiDkoFMyItcKJJ1a1h">
+  <li data-page-node-id="HcV9mE7E0rQs3QX5TACQkW"><strong data-page-node-id="GdOrJQlcoH7pPDjGuBNg2W">菜单</strong>：设置 → ☑「启用浮动工具栏」/「设置可视化…」</li>
+  <li data-page-node-id="AwkHEnr1ybNKTqwcaPLvrG"><strong data-page-node-id="RheyhQ2TGRGuhdEsMXwn2m">托盘</strong>：托盘图标右键 →「可视化」子菜单（6 项开关 + 浮动工具栏）</li>
+  <li data-page-node-id="GzPgbN7F0OYU1jnSjjJGgs"><strong data-page-node-id="JzmfR7iBb38FXECMeAm3h6">浮动工具栏</strong>：点击图标开关对应功能</li>
+  <li data-page-node-id="24tV7sjF9Nk3lcoAyp65CG"><strong data-page-node-id="BD7KurzTjZ9Fx0VIDG8usP">热键</strong>：见 <a href="#s11" data-page-node-id="qxzkQT9kPrtAtbBNw1BHFU">11.2 可视化热键</a></li>
+</ol>
+<p data-page-node-id="w8f8UOlDYG8thhpBKhhynG">任意一处切换，其余三处勾选状态<strong data-page-node-id="9Tetv6z7cW678jym2eT0FN">即时同步</strong>。</p>
+<div class="callout tip" data-page-node-id="5uDjiB5LVsirAMYcFMFVAr">
+  <strong data-page-node-id="eeybM6XzL4P8RHR2miXt5z">💡 状态持久化</strong>
+  关闭前各功能开关状态（高亮/点击/键盘/坐标/聚光灯/放大镜/浮动工具栏）自动保存到 <code data-page-node-id="aKI8bLzGOI2tVqEsNCwtCn">config/config.json</code> 的 <code data-page-node-id="OAAXJYvoqzwL0umwXykv0s">viz</code> 段，重启后恢复原状态。
+</div>
+
+<h3 data-page-node-id="AyAKErOLSrRkxWRuSBCFnw">16.3 浮动工具栏</h3>
+<p data-page-node-id="FfE58w47P0wXuyAaX2jABq">悬浮工具条（默认屏幕右下角，可拖动），提供 6 个功能按钮：定位/高亮、点击效果、键盘、坐标、聚光灯、放大镜。图标为内置线条绘制；若 <code data-page-node-id="qNQ8at4rVjZ46HkswQCfvC">config/floatbar/*.svg</code> 存在则优先使用 SVG。图标颜色可在可视化设置中分别调整。</p>
+
+<h3 data-page-node-id="jwvYlHBeEIKgxkH37PtGrA">16.4 设置可视化对话框</h3>
+<p data-page-node-id="zornYQRbjtRLNtBEre4WEH">菜单「设置 → 设置可视化…」或热键 <kbd data-page-node-id="MxormzmPItcAOV6aGFUi16">Ctrl</kbd>+<kbd data-page-node-id="MuXLhO76eKbw2l69gBAp5d">Shift</kbd>+<kbd data-page-node-id="6rXBZROr7Xusdixq1RpDGf">F1</kbd> 打开：</p>
+<table data-page-node-id="UnkVo8i71sHajsAnXvJ5N4">
+  <tr data-page-node-id="imVsNyO7bnQCCc6NpZAlHm"><th data-page-node-id="Uzrauk2MmvMrd6lF2TbVzG">分组</th><th data-page-node-id="3AsXokaAkSGaOwvXMxAMIH">主要设置</th></tr>
+  <tr data-page-node-id="CofLIwUkULI8GHKarnt8uk"><td data-page-node-id="jGL8bvKtfbUCkvJMTesvIj">通用</td><td data-page-node-id="HUhT4ZvnEuZAicm9ep8yKi">显示器选择（主屏/全部/自定义）、刷新间隔、双击间隔</td></tr>
+  <tr data-page-node-id="o4FgqOlWLqGqSHH4ew8RfG"><td data-page-node-id="XGEQVdUD80f7CCqm8sHnWq">鼠标</td><td data-page-node-id="SFzvSslDTnr6LRymZgM2mP">高亮宽度、点击效果类型（涟漪/光晕/无）、颜色、线宽、环数</td></tr>
+  <tr data-page-node-id="t1YbXTCtBB9h11wrZdZo1L"><td data-page-node-id="zfoJQgZN9F4dgutGvbUcFO">键盘</td><td data-page-node-id="uMPoTeXqHFyRSWii87zn8a">开关、只显示组合键、位置、字号、背景色、显示时长</td></tr>
+  <tr data-page-node-id="TUOcmstw8gkvb8Pjn1D2vo"><td data-page-node-id="pnLYgzZC1mXBGWdDrtJpaU">聚光灯</td><td data-page-node-id="9ZqF8UXTF4ImODgaqvOBWb">开关、半径、暗度</td></tr>
+  <tr data-page-node-id="RPrQH4cwlc1QoZFzn9ctJb"><td data-page-node-id="7aO0DmLMVR3hJYOzk73hIC">放大镜</td><td data-page-node-id="isRDB0k0yrIWpHyyyKjT9Z">开关、大小、倍率、形状（圆形/方形）</td></tr>
+  <tr data-page-node-id="PYRikIoWgNpSVWxW0lwGaP"><td data-page-node-id="xhOwZlSlgDds2mkCXeETc7">鼠标坐标</td><td data-page-node-id="IxGxqoIB39oS58ngSWYAZZ">开关、字号、位置、自定义坐标、亚像素显示</td></tr>
+  <tr data-page-node-id="RsO6NjtFxLjp2rZida1itE"><td data-page-node-id="L8KvyBhHmAHlLQZfAfaFTG">浮动工具栏</td><td data-page-node-id="B1olEmiWBYLkoDFoSI1hP9">开关、图标颜色</td></tr>
+  <tr data-page-node-id="seyPaIN0t2frQn752g3k0z"><td data-page-node-id="wYfkRgAWItE9RxPAFva5W2">关于</td><td data-page-node-id="plq3YoVe86rBhlHoiCAa9G">版本信息</td></tr>
+</table>
+<div class="callout info" data-page-node-id="mvsQHqE1THKi458xp5gsh7"><strong data-page-node-id="6CFPzZ171UKnEnCtSRkQxI">ℹ 热键统一管理</strong>快捷键已并入主程序「工具 → 热键设置」（可视化分组），本对话框不再单独编辑热键。</div>
+
+<h3 data-page-node-id="T1ZYBeQ00qba5fByBuiwxd">16.5 与「效果叠加」的区别</h3>
+<table data-page-node-id="89Lj0Mlaj9ix7rAKnwTAuN">
+  <tr data-page-node-id="6XlSD48LGzgA87PUh3o0Jb"><th data-page-node-id="bKZBLBObhDsUpU0Grt4ezB"></th><th data-page-node-id="KWwWKxTUnFym90lYz13fWM">效果叠加（15 章）</th><th data-page-node-id="6P33nlau7g1WhRu0kmN9EE">实时可视化（本章）</th></tr>
+  <tr data-page-node-id="F09sSX6xNFoJvWCJ7QeiBS"><td data-page-node-id="LXu3r9nIHlww3eFrgUdjVE">触发方式</td><td data-page-node-id="3EfzOBm2R07bOexlRBmGNL">方案执行时由引擎触发</td><td data-page-node-id="8H20r8nNZ3qLBLBvnFounV">实时监听真实的键鼠操作</td></tr>
+  <tr data-page-node-id="tUmrWF5TaUyso9H6k7GPgF"><td data-page-node-id="ua1cFdWBqlh6HUqhGFHcF0">用途</td><td data-page-node-id="HfRrG9hhe90oawDBww52Os">调试方案、观察执行位置</td><td data-page-node-id="QIYC3iBqrzukJNGTjvC40W">教学/演示/录屏辅助</td></tr>
+  <tr data-page-node-id="aIVR12qB1WpvRhMXvEj8Y3"><td data-page-node-id="oekTsJ5wXwEmFcrBdRMNSz">状态来源</td><td data-page-node-id="zmybhPgMVUL8VlIfpjJG5Q">方案执行事件</td><td data-page-node-id="DgbqJQ0ofxkKj71jR8LoMo">pynput 全局监听</td></tr>
+</table>
+<p data-page-node-id="bZZVQZFdSOBFCGXKBtWIfm">两者相互独立、可同时使用。</p>
+</section>
+
+<!-- ===================== 17. 托盘与关闭行为 ===================== -->
+<section id="s17" data-page-node-id="cl7YJV1r8FSMR3XDnCiEtL">
+<h2 data-page-node-id="N6kX0w20Hisrm5EveX6yo3">17. 托盘与关闭行为</h2>
+<h3 data-page-node-id="zoRzVCLNhTCWqU0VUt3CRU">17.1 托盘图标</h3>
+<p data-page-node-id="6HI5jlAxQbDBgLGcifyvHX">启动后系统托盘出现程序图标，右键菜单：</p>
+<ul data-page-node-id="YZiTtTawYpplCsNKSk7bZi">
+  <li data-page-node-id="WarnvEI19VOTJIEPmPlEmh"><strong data-page-node-id="EF4K2oTey6WL4SgeSceWNN">显示主窗口</strong>：恢复主窗口</li>
+  <li data-page-node-id="iOrezbR0vzIRCVkNOEM48I"><strong data-page-node-id="yX3tGX50L5iosYqObh7Op1">暂停 / 恢复</strong>：与主界面按钮等效</li>
+  <li data-page-node-id="Pj7WvROOIY2nR7tTdjgzXy"><strong data-page-node-id="t3nKdZ8NPlH5ekDzNdZkHI">停止执行</strong>：停止当前方案</li>
+  <li data-page-node-id="Xt2gubJDCSO5eFi2CMsfWN"><strong data-page-node-id="IVcQbnLOQXPH1Ep93FlYE5">可视化</strong>：子菜单（鼠标高亮 / 点击效果 / 按键显示 / 鼠标坐标 / 聚光灯 / 放大镜 / 浮动工具栏，勾选状态与菜单、浮栏实时同步）</li>
+  <li data-page-node-id="yzu2a1bWuaRyzMamoKzZ3y"><strong data-page-node-id="haEDb3ebnwmiGXsyCpugMC">关闭行为设置…</strong>：修改关闭窗口时的行为</li>
+  <li data-page-node-id="d8Vs1251OEa2rBluC9Heev"><strong data-page-node-id="6quCQ8qPT3T8Kl2aggZ34O">彻底退出</strong>：直接退出程序（可视化模块一并停止）</li>
+</ul>
+<h3 data-page-node-id="FUsBjW4kk8XbxYSY3DRCez">17.2 关闭行为</h3>
+<table data-page-node-id="KEWNL2mqG1OQ2OdlepEx7o">
+  <tr data-page-node-id="3CtSx7Z7EEpsyDa9hg5UAm"><th data-page-node-id="idBNujB069lb60XLi26iAE">行为</th><th data-page-node-id="VWvJdFDyTP8VnMjHZJQdTd">说明</th></tr>
+  <tr data-page-node-id="IQcAR3TGT2Xu9AF3TEBQR1"><td data-page-node-id="lHjk9AS3wMeunRa70cqnXW">最小化到托盘</td><td data-page-node-id="XWDyiIkFgvY10e7jWQVsUC">窗口隐藏，方案/热键继续有效（默认）</td></tr>
+  <tr data-page-node-id="uPLa7RBhzodpenJqriYROU"><td data-page-node-id="RL83eBpIgC0qzehYWSL4YX">最小化到任务栏</td><td data-page-node-id="QzzgXeHFtDCBsHzVoGPuZK">窗口最小化，仍在任务栏</td></tr>
+  <tr data-page-node-id="SCZtu46uswGiSh9H58LW6r"><td data-page-node-id="CDrKOpFcATKgu1vVAtFudG">彻底退出</td><td data-page-node-id="fIQt2o0HaD3rYiGqMFFvFe">若方案运行中先确认，然后退出</td></tr>
+</table>
+</section>
+
+<!-- ===================== 18. 数据与配置文件布局 ===================== -->
+<section id="s18" data-page-node-id="8MQN7xywym9nZvGPg2urtt">
+<h2 data-page-node-id="l8iv02bsqbk4z4eRHOyM33">18. 数据与配置文件布局</h2>
+<p data-page-node-id="in3TiCWEjWBWAc8HEsgCof">程序目录分为两大块：<strong data-page-node-id="arPnRH1G9b2gFnEQJ8ToX2">程序设置</strong>（<code data-page-node-id="W5yTxDlfUPr80yu15r9B18">config/</code>）与<strong data-page-node-id="CtsHtu2ny9IlSs3XLmTRnp">使用数据</strong>（<code data-page-node-id="maOeW8PXoqnvpceXTr3XvA">userdata/</code>）。</p>
+<div class="tree" data-page-node-id="MnXzgmlvgs0HNXefKuepFy"><span class="dir" data-page-node-id="vXcwBrro8LXGjlQDvxbJPw">应用根目录/</span>（源码 = 项目根 / 打包 = EXE 同级）
+├── KeyMouseMate.exe
+├── manual/                      <span class="comment" data-page-node-id="YHE4CTbO9iqEToFBVQEssG"># 手册（打包版由 postbuild 复制）</span>
+├── <span class="dir" data-page-node-id="q7AGnmDelVwCCXqpqJz6DR">config/</span>                  <span class="comment" data-page-node-id="ZybAXy5tGB6b46jvXt5DaW"># ★ 程序设置</span>
+│   ├── config.json          <span class="comment" data-page-node-id="DV1rKoHkfudOEtARa0mwGY"># 主题/热键/OCR/效果/布局 + viz 段</span>
+│   ├── <span class="dir" data-page-node-id="j3gY9tE7eiC3UnJupIM8xP">floatbar/</span>            <span class="comment" data-page-node-id="0UdIfjJNPIKWi14bddOEaZ"># 浮动工具栏 SVG 图标（可选）</span>
+│   └── qrcode.png           <span class="comment" data-page-node-id="Gi7FpKZFLrE13AJxCVihYD"># 「关于」页二维码（可选）</span>
+└── <span class="dir" data-page-node-id="eFpTiYn9PJ9EeTvmU0KLYF">userdata/</span>                <span class="comment" data-page-node-id="ZMYm8VGL35tOy6kIytic0c"># ★ 使用数据</span>
+    ├── data.json            <span class="comment" data-page-node-id="vYKlDu3FXnNBBAnzqxlmMS"># 方案/节点排序、默认方案</span>
+    ├── passwords.db         <span class="comment" data-page-node-id="BwDEHPrEDPBmvE03TSCtjA"># 密码库（SQLite + AES）</span>
+    ├── <span class="dir" data-page-node-id="33ur7ZQhmnDpHwZ9HDwz66">plans/</span> <span class="dir" data-page-node-id="yTaLxXrHYr6XlFF8zCxfaV">nodes/</span> <span class="dir" data-page-node-id="Dy3P9UAA6MlGU0wszf9QYr">actions/</span>
+    └── <span class="dir" data-page-node-id="lWTgQHSRHu8HSt6eczivIZ">logs/</span></div>
+<h3 data-page-node-id="SnkVh26cHUdXNRuZoV8yAP">18.1 旧版自动迁移</h3>
+<ul data-page-node-id="ohtjgdx9e3eAhrFKDRKXM7">
+  <li data-page-node-id="IrFn79zVckjJEZ31SUZ42Q"><code data-page-node-id="nZKIefzQH0oF6mFupqizfE">userdata/config/config.json</code> → <code data-page-node-id="4yt9pRUKyKWysXGQSHm4G8">config/config.json</code>（旧文件保留 <code data-page-node-id="mobsPu7xK3FQsA20L3o5Uh">.bak</code>）</li>
+  <li data-page-node-id="2xibR9MMFKQz7xFi4yAZxI"><code data-page-node-id="KuHg6jvTYdYQFBtiWxsWcR">userdata/config/passwords.db</code> → <code data-page-node-id="0wt6H4tuhC0RhI2nEjPWcF">userdata/passwords.db</code></li>
+  <li data-page-node-id="rCvuaMUYdBGtVXj0KcB1n5"><code data-page-node-id="TjC1FRFq6sefgSGZZFflvi">userdata/floatbar/</code> → <code data-page-node-id="ilomz4mez8ZHds5g38NT6Q">config/floatbar/</code></li>
+  <li data-page-node-id="sqY00pO7GTP3jxeorzSnt1">config.json 中 <code data-page-node-id="3dTm5IHGLKUt1eJhXsjJj2">plan_order</code> / <code data-page-node-id="NKdKj9HXtXBhXCmFcsorNR">node_order</code> / <code data-page-node-id="7WPzHGwDGH3D7LODA7TyPI">default_plan</code> → <code data-page-node-id="eMh24EgdFCNBo2h20q7Y6Q">userdata/data.json</code></li>
+</ul>
+<h3 data-page-node-id="lGcrIafGbhUG76R10dGWVF">18.2 备份与迁移</h3>
+<ul data-page-node-id="qbqN2B2w5VToP3znaPGCri">
+  <li data-page-node-id="zKWr2hUZT3k5FSvnnhdUyw"><strong data-page-node-id="sOKLGt59xviBgofqHgmFqC">完整备份</strong>：同时复制 <code data-page-node-id="PpjfvXR7w8IGDjt7zv8ydA">config/</code> 与 <code data-page-node-id="V9mGEjKKiCM8gdHIYR3P6R">userdata/</code>。</li>
+  <li data-page-node-id="8H4WCDTm8NaNHFs3CGTmG0"><strong data-page-node-id="Y2haHPZcvnIUMcadQSK34c">只备数据</strong>：复制 <code data-page-node-id="7G3fTDEHypYOXDbvkqwlek">userdata/</code>（方案/节点/动作/密码/排序全部在内）。</li>
+</ul>
+<h3 data-page-node-id="MXr3WLRSY2ghNtQIU6VCMk">18.3 二维码</h3>
+<p data-page-node-id="EFTGmICPs5f5tu7CNqsEYq">「帮助 → 关于」按顺序查找：<code data-page-node-id="I2w8nD8gcsjpo2ZJwBuMix">config/qrcode.png</code> → EXE 同目录 → 程序目录。放入 <code data-page-node-id="YiR3x4BytEfkELyQeqraUW">config/qrcode.png</code> 即可显示；打包时若项目根目录存在 <code data-page-node-id="XvGHtxfIT28ei4F5YsK8xc">qrcode.png</code> 会自动打入 <code data-page-node-id="jEpRBxIakVWa8nSJSf7li8">config/</code>。</p>
+</section>
+
+<!-- ===================== 19. 迁移旧方案 ===================== -->
+<section id="s19" data-page-node-id="O0BphnBWETr1rrda8aMgK1">
+<h2 data-page-node-id="hrMLfQBK5xG0k8b7Rqlmzw">19. 迁移旧方案</h2>
+<p data-page-node-id="bgiZ9g1VX8kFxkH5XdtJ2n">菜单「方案 → 迁移旧方案」：扫描旧版 <code data-page-node-id="y5qetPcOPJXq5sI2yP7KWu">schemes/*.json</code>，自动转换：</p>
+<ul data-page-node-id="PkWBZjRwWTsr9ASJfrXLJB">
+  <li data-page-node-id="jaSzPYOoEwJOaKiDAJoOG1">主任务 → 节点「主流程-<em data-page-node-id="EkL5x093vc0Ah4QQBDE9Vw">方案名</em>」</li>
+  <li data-page-node-id="y1EtlcXiwzVtBeDu15OR3X">弹窗规则 → 监控规则 + 处理节点「弹窗处理-<em data-page-node-id="CA3yOtkPoUBWDCQ79sNndv">方案名</em>-<em data-page-node-id="RjHzSM4DwrO1pDEYPDCPjP">规则名</em>」</li>
+  <li data-page-node-id="W0v0ThGQcaHT0gFmt09edn">子动作、点击坐标、密码引用全部保留；旧版"总轮次" → 步骤循环次数</li>
+</ul>
+<p data-page-node-id="Ge2Reu3KowwjK6GteOcCho"><strong data-page-node-id="zO0qDkatf2MlTQdTQJPkam">幂等</strong>：已存在的同名内容自动跳过，可重复执行。</p>
+</section>
+
+<!-- ===================== 20. 环境配置与排错 ===================== -->
+<section id="s20" data-page-node-id="zvRqvmTnGW51j7DzPoH9A0">
+<h2 data-page-node-id="axEfEhXkovZ5OKzST0yBtE">20. 环境配置与排错</h2>
+<h3 data-page-node-id="T8p9bOI0MgLk1pssQLWuCX">20.1 环境要求</h3>
+<table data-page-node-id="VfyMmCkAmyMsFFGgh5MTrZ">
+  <tr data-page-node-id="s9tqTJTDpl9hCQRmkujAvh"><th data-page-node-id="4dMKECU3Z080xk20ndcdoN">平台</th><th data-page-node-id="h9pZ1VCZEb3lypHqlWoA3D">Python</th><th data-page-node-id="lGdRRPcCymSNDu0gSQbOAj">依赖文件</th></tr>
+  <tr data-page-node-id="1FkEj7wcC3IWME9PD80ukp"><td data-page-node-id="Wbq8VZsJkZD751gonBAHiP">Win10/11</td><td data-page-node-id="ZFquBOMDpCHvIpyo5kxb8N">3.13（推荐）</td><td data-page-node-id="AC2bUYqFo95fDqEm9EZMvA"><code data-page-node-id="QG0fyv7BDBh8r3ChwCPcIb">requirements.txt</code></td></tr>
+  <tr data-page-node-id="7VSuLeheD7TW9VwHcOtC1m"><td data-page-node-id="6qnvlZfGfyf9ybKsPvyc5P">Win7</td><td data-page-node-id="Ehf5cJ05owvVNUK5IYETUt">3.8.x</td><td data-page-node-id="yFQ4QM9gttEFVoy5GGepG6"><code data-page-node-id="iZvDEfds8U8Njs2meMovMU">requirements-win7.txt</code></td></tr>
+</table>
+<h3 data-page-node-id="TfNAazKAMkmFRY0N9FNyHM">20.2 安装依赖</h3>
+<pre data-page-node-id="MNwyq86kIZKhivGJAIvEEK"><code data-page-node-id="71OJBWiobIbtuyyciQCa3s">pip install -r requirements.txt -i https://pypi.tuna.tsinghua.edu.cn/simple</code></pre>
+<div class="callout info" data-page-node-id="K0vel5SyUupikwDXFu76hh"><strong data-page-node-id="pRc5fonrjC1436uwAcEuNU">ℹ 可视化模块依赖</strong>额外需要 <code data-page-node-id="NQlsBzQ8ResCkQAmHA2Vv7">pynput</code>、<code data-page-node-id="HAPNUhYh9Oz4lOOQFSW7Cb">pywin32</code>（已列入 requirements.txt）；缺失时主程序仍可运行，仅提示"实时可视化模块不可用"。</div>
+<h3 data-page-node-id="x3QffZBROuP223HYwEppqj">20.3 自检</h3>
+<pre data-page-node-id="4NeHBbjNdKxXm0Fvfll2a5"><code data-page-node-id="8wSECGyU0e7aBtJGEBxhhS">python -m rpa.test</code></pre>
+<h3 data-page-node-id="SN6lchwBp1GnupOOGNqbBB">20.4 常见问题</h3>
+<table data-page-node-id="qBRkJ1dhPtCWbqThx8MVgC">
+  <tr data-page-node-id="edX7FU2fe98WtW2DBQAEvY"><th data-page-node-id="CW4qlmyAXcGmp6cWC5hRnw">问题</th><th data-page-node-id="3mNvMnz6DGknCZ0wOFbtrA">解决</th></tr>
+  <tr data-page-node-id="K3EA31bgIIBuEebgMftz8N"><td data-page-node-id="1R35tDaVws79bkq8MZf21W">RapidOCR 不可用</td><td data-page-node-id="PEuPLn1iZ7yfhxYyFp4Mzd">确认用 Python 3.13 安装依赖</td></tr>
+  <tr data-page-node-id="F7Apz7OTQlAYm6O375CvMt"><td data-page-node-id="0pVSOXB7XxstIObEXkXpln">OCR 识别中文差</td><td data-page-node-id="HBmBnOCxDzn3gxKXdCvKBq">「OCR 设置」切换为 RapidOCR</td></tr>
+  <tr data-page-node-id="VMkPq54sQ63kv1UQdB4Fki"><td data-page-node-id="26oIIniQNXWBJz0JG9g1eX">坐标不准确</td><td data-page-node-id="mPEeOBSj4jhLcxqUrTrRvP">DPI 缩放问题，以管理员权限运行</td></tr>
+  <tr data-page-node-id="fLPUCXMcYlMQH5iXNMyuxQ"><td data-page-node-id="KVmQU0DbvXQVNv6EgFrcMV">可视化模块不可用</td><td data-page-node-id="qGRkQpCSXW0iGex6QA8Zc6"><code data-page-node-id="PeGUcD1HNlQqBfmJ4Uokvj">pip install pynput pywin32</code></td></tr>
+  <tr data-page-node-id="BxXSfpoKz1XxYGF8FKivyH"><td data-page-node-id="i2rqymBMvU64Y5Bpj8OwPf">浮动工具栏图标简陋</td><td data-page-node-id="sg8wT1yAhY1fpjC59wYvDT">将 SVG 放入 <code data-page-node-id="OWjnq9wrKB9kaOQ6EqOTSK">config/floatbar/</code>（有内置线条绘制回退）</td></tr>
+  <tr data-page-node-id="ukxWNnEYVS7HZsuTbexbbO"><td data-page-node-id="9SgHYU4ZunhFU45GOfcYka">修改代码后不生效</td><td data-page-node-id="F7tSz6wNlNFT7Ga8KbHHP2">删除 <code data-page-node-id="5Y6UFdIt1M14tbgS8Klo3P">rpa/__pycache__</code> 再重启</td></tr>
+</table>
+<h3 data-page-node-id="sgZQbJzBE4Jq9wxqCmPKof">20.5 打包要点（开发版）</h3>
+<ul data-page-node-id="AFobnVCgzf0XGxW9XREOAz">
+  <li data-page-node-id="6q4DlA8Xlps6mVaWZIjqmO"><code data-page-node-id="fxGxKmxBfKgnoTrrxRdmge">dev\build\app_build.bat</code> 一键打包（打包辅助脚本同在 <code>dev/build/</code>），自动将纯净默认 <code data-page-node-id="xeuCjFWu53HDF6AD6SYDqW">config.json</code> 种子写入 <code data-page-node-id="JoAJ5YrFblwbj3kdTKZbPk">dist/KeyMouseMate/config/</code>。</li>
+  <li data-page-node-id="7GGEVghxIjMiLCmses4vUN"><code data-page-node-id="LvEm6JnozyLzLvpcRb912P">KeyMouseMate.spec</code>：<code data-page-node-id="IEjG7u5B0rxfquEujgidAR">datas</code> 打包 <code data-page-node-id="TAbsyCCif2yuczZTwuRzok">app.ico</code>、<code data-page-node-id="Cnxjl61uLu1GriTElzbK9v">config/floatbar/*.svg</code>、（可选）<code data-page-node-id="FGXxpkx5jZauRpxuF65sQW">qrcode.png</code> → <code data-page-node-id="GkBJHZixg2gmKTkniBZ0mM">config/</code>；<code data-page-node-id="b0KObpToVDChoUHVWgY6HC">hiddenimports</code> 含 <code data-page-node-id="FH084H6O4WOf4zk0tH6eW8">pynput</code>、<code data-page-node-id="X3BMfUr2hVfENtTtUrsD8R">win32*</code>、<code data-page-node-id="97OKhSBnJN6qXACSgZxC5A">keyboard</code>、<code data-page-node-id="Oy1rKizyNd67nNPE0PeM3Y">pyautogui</code>。</li>
+  <li data-page-node-id="LZLWnes5BU5Fk3bAjcpWI9"><strong data-page-node-id="uOTLWLnofiac0P66JE6dXZ">不得排除 <code data-page-node-id="Y6HHUyANeuJ8yLBk6E2k7X">PyQt5.Qt5.QtSvg</code></strong>（浮动工具栏 SVG 图标依赖）。</li>
+</ul>
+<h3 data-page-node-id="A829zEtaJj1GtaUMYCl9CF">20.6 目录结构（源码）</h3>
+<div class="tree" data-page-node-id="RkZdm0Ofm54gjGCK2jP1Vg"><span class="dir" data-page-node-id="r3lLQ9RdNmqfFScNHOrIG7">KeyMouseMate/</span>
+├── <span class="dir" data-page-node-id="QXK4cc3J3UNs6gDxrwdd9p">rpa/</span>
+│   ├── __init__.py      <span class="comment" data-page-node-id="MB1lqYnlXcRGSkyoiPDxj0">APP_NAME / APP_VERSION / APP_AUTHOR</span>
+│   ├── app.py           <span class="comment" data-page-node-id="hkJP9xeN4ONUKFx7xsTpab">启动入口、单实例锁、自检、退出清理</span>
+│   ├── config.py        <span class="comment" data-page-node-id="QCUhGOw0F0WouRgwXqiPL4">路径管理 / 默认配置 / 目录迁移 / DPI</span>
+│   ├── viz.py           <span class="comment" data-page-node-id="Xv8jye71SOZE2StB0kapGn">实时可视化模块（VizController）</span>
+│   ├── models.py        <span class="comment" data-page-node-id="Xbu0Emt7c7Q9Aac445rHTq">Action / Node / NodeStep / Condition / Plan</span>
+│   ├── variables.py     <span class="comment" data-page-node-id="JHvb2nFTVFTBVqia1ejmoZ">变量上下文 + 安全表达式求值</span>
+│   ├── ocr.py           <span class="comment" data-page-node-id="YTZ1e9zUnSY5zpmHxfjeVB">OCRService 双引擎</span>
+│   ├── actions.py       <span class="comment" data-page-node-id="2seVDOE5N9vIJDkrKLyLdt">动作执行器 + EngineControl</span>
+│   ├── executor.py      <span class="comment" data-page-node-id="qVyG4vid1ffmAZkR5DWp3x">方案执行引擎</span>
+│   ├── watcher.py       <span class="comment" data-page-node-id="KVOEaihc4FMce7CB9L6wbj">弹窗监控线程</span>
+│   ├── password.py      <span class="comment" data-page-node-id="GrzeSWWqOavJaWCAAa034k">密码库（SQLite + AES）</span>
+│   ├── migration.py     <span class="comment" data-page-node-id="0H45uLPAXaLm6tGzIBAdSD">旧方案迁移</span>
+│   ├── test.py          <span class="comment" data-page-node-id="weqk6H5A4DwWZ99rKPMzwu">内置自检</span>
+│   └── <span class="dir" data-page-node-id="K11foe1wvSHmWhSa8QJfeg">ui/</span>            <span class="comment" data-page-node-id="kTx69bUkovAvxJsChLjg3d">主窗口、面板、编辑器、对话框、托盘、主题</span>
+├── <span class="dir" data-page-node-id="QGPHvdKWfMtGhEdtPabgqz">config/</span>          <span class="comment" data-page-node-id="cKFwG7VVEUVIJTHyffAiCi">程序设置（config.json / window_state.ini / floatbar/ / qrcode.png）</span>
+├── <span class="dir" data-page-node-id="rRWYUIMDrAkr9RMaSkHEcY">userdata/</span>        <span class="comment" data-page-node-id="kh5RJ8LTcbQyAZhta7epuw">使用数据（data.json / passwords.db / plans…）</span>
+├── <span class="dir" data-page-node-id="GlVCXegO2mt18cxB7AV6kI">dev/</span>                <span class="comment" data-page-node-id="GlVCXegO2mt18cxB7AV6kI">开发辅助脚本（build/ run/ upload/ qr/，不随包分发）</span>
+│   ├── <span class="dir" data-page-node-id="0pA4FUrALAejIilJRJrubi">build/</span>           打包：KeyMouseMate.spec / app_build.bat / 打包辅助脚本
+│   ├── <span class="dir" data-page-node-id="IP0U0VOOOaVkEKQTHtjS3L">run/</span>             启动：app_run.bat / _run_app.py
+│   ├── upload/          上传：upload_to_github.bat/.py / upload_config.json
+│   └── qr/              二维码内嵌：embed_qr.py
+</section>
+
+<hr style="margin-top:48px;border:none;border-top:1px solid var(--border);" data-page-node-id="ZWgK89RarnwaSAwORwVBvx">
+<p style="text-align:center;color:var(--text-light);font-size:13px;margin-top:24px;" data-page-node-id="Y3AHq2l52xaTtfBgSxBp8o">
+  本手册随版本 2.0 更新。官方网站 https://keymousemate.softhub.cc
+</p>
+
+</main>
+</div>
+
+<script>
+const sections = document.querySelectorAll('section[id]');
+const links = document.querySelectorAll('.sidebar a');
+function onScroll() {
+  let cur = '';
+  sections.forEach(s => { if (window.scrollY >= s.offsetTop - 100) cur = s.id; });
+  links.forEach(a => { a.classList.toggle('active', a.getAttribute('href') === '#' + cur); });
+}
+window.addEventListener('scroll', onScroll);
+onScroll();
+</script>
+</body>
+</html>

@@ -5,7 +5,7 @@ Windows 平台 RPA 工具——录制、调度、OCR 识别、弹窗处理、实
 🌐 **在线主页**：<https://softhubcc.github.io/KeyMouseMatePage/>
 
 [![Platform](https://img.shields.io/badge/platform-Windows%2010%2F11-blue)](https://www.microsoft.com/windows)
-[![Version](https://img.shields.io/badge/version-2.0.0-green)](https://github.com/SoftHubCC/KeyMouseMatePage/releases)
+[![Version](https://img.shields.io/badge/version-2.1.26256.1603-green)](https://github.com/SoftHubCC/KeyMouseMatePage/releases)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
 ## 📥 下载
@@ -14,8 +14,13 @@ Windows 平台 RPA 工具——录制、调度、OCR 识别、弹窗处理、实
 
 | 文件 | 说明 |
 |------|------|
-| `KeyMouseMate_install_v2.0.0.exe` | 安装版（一键安装） |
-| `KeyMouseMate_portable_v2.0.0.zip` | 便携版（解压即用） |
+| `KeyMouseMate_installer_v2.1.26256.1603.exe` | 安装版（一键安装） |
+| `KeyMouseMate_portable_v2.1.26256.1603.zip` | 便携版（解压即用） |
+
+
+## 🆕 最新更新 (2026-09-13)
+
+- **弹窗优化**：编辑公共节点/动作弹窗改为左右布局，固定宽度 520×140，默认焦点在取消按钮
 
 ## ✨ 核心功能
 
