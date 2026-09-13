@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-page-node-id="dGqmUbnHUgTN2f9Ty2N4dm">
+<head data-page-node-id="G6OBhcLRmuzbfZxfwXfunq">
+<meta charset="UTF-8" data-page-node-id="2MYvaIEmndKgz3PLfqDmPg">
+<meta name="viewport" content="width=device-width, initial-scale=1.0" data-page-node-id="wy1fmFVFu9Ip3YWLpLHcB0">
+<title>键鼠自动化助手 — KeyMouseMate</title>
+<style>
+  :root {
+    --primary: #1a73e8;
+    --primary-dark: #1558b0;
+    --accent: #34a853;
+    --bg: #f8f9fa;
+    --card-bg: #ffffff;
+    --text: #202124;
+    --text-light: #5f6368;
+    --border: #dadce0;
+    --shadow: 0 2px 12px rgba(0,0,0,.08);
+    --radius: 12px;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: 'Microsoft YaHei','PingFang SC','Helvetica Neue',sans-serif; color: var(--text); background: var(--bg); line-height: 1.7; }
+  a { color: var(--primary); text-decoration: none; }
+  a:hover { text-decoration: underline; }
+
+  /* ── NAV ── */
+  nav { background: #fff; border-bottom: 1px solid var(--border); padding: 0 24px; position: sticky; top: 0; z-index: 100; box-shadow: 0 1px 4px rgba(0,0,0,.06); }
+  .nav-inner { max-width: 1100px; margin: 0 auto; display: flex; align-items: center; height: 56px; gap: 32px; }
+  .nav-brand { font-size: 17px; font-weight: 700; color: var(--primary); letter-spacing: .5px; }
+  .nav-links { display: flex; gap: 20px; margin-left: auto; }
+  .nav-links a { color: var(--text-light); font-size: 14px; font-weight: 500; transition: color .2s; }
+  .nav-links a:hover { color: var(--primary); text-decoration: none; }
+
+  /* ── HERO ── */
+  .hero { background: linear-gradient(135deg, #1a73e8 0%, #0d47a1 100%); color: #fff; padding: 72px 24px 80px; text-align: center; }
+  .hero h1 { font-size: 42px; font-weight: 800; margin-bottom: 16px; letter-spacing: 1px; }
+  .hero p { font-size: 18px; opacity: .88; max-width: 600px; margin: 0 auto 32px; }
+  .hero-btns { display: flex; gap: 14px; justify-content: center; flex-wrap: wrap; }
+  .btn { display: inline-flex; align-items: center; gap: 8px; padding: 12px 28px; border-radius: 8px; font-size: 15px; font-weight: 600; cursor: pointer; transition: all .2s; border: none; }
+  .btn-white { background: #fff; color: var(--primary); }
+  .btn-white:hover { background: #e8f0fe; text-decoration: none; }
+  .btn-outline { background: transparent; color: #fff; border: 2px solid rgba(255,255,255,.6); }
+  .btn-outline:hover { border-color: #fff; background: rgba(255,255,255,.1); text-decoration: none; }
+  .screenshot-hero { max-width: 860px; margin: 40px auto 0; border-radius: 12px; overflow: hidden; box-shadow: 0 8px 40px rgba(0,0,0,.25); border: 1px solid rgba(255,255,255,.15); }
+  .screenshot-hero img { width: 100%; display: block; }
+  .placeholder { background: linear-gradient(135deg, #e0e7ff 0%, #c7d2fe 100%); display: flex; align-items: center; justify-content: center; flex-direction: column; gap: 8px; color: #4f46e5; font-size: 14px; font-weight: 600; }
+  .placeholder svg { opacity: .5; }
+  .ph-label { opacity: .7; font-size: 12px; font-weight: 400; }
+
+  /* ── SECTIONS ── */
+  section { padding: 72px 24px; }
+  .section-title { text-align: center; margin-bottom: 48px; }
+  .section-title h2 { font-size: 30px; font-weight: 700; margin-bottom: 10px; }
+  .section-title p { color: var(--text-light); font-size: 16px; }
+  .container { max-width: 1100px; margin: 0 auto; }
+
+  /* ── FEATURES GRID ── */
+  .features { background: #fff; }
+  .feat-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 24px; }
+  .feat-card { background: var(--bg); border: 1px solid var(--border); border-radius: var(--radius); padding: 28px; transition: box-shadow .2s, transform .2s; }
+  .feat-card:hover { box-shadow: var(--shadow); transform: translateY(-3px); }
+  .feat-icon { width: 48px; height: 48px; border-radius: 10px; display: flex; align-items: center; justify-content: center; margin-bottom: 16px; font-size: 24px; }
+  .feat-icon.blue   { background: #e8f0fe; color: var(--primary); }
+  .feat-icon.green  { background: #e6f4ea; color: var(--accent); }
+  .feat-icon.orange { background: #fef7e0; color: #f9ab00; }
+  .feat-icon.purple { background: #f3e8fd; color: #8430ce; }
+  .feat-card h3 { font-size: 17px; font-weight: 700; margin-bottom: 8px; }
+  .feat-card p { font-size: 14px; color: var(--text-light); }
+
+  /* ── SCREENSHOTS ── */
+  .screenshots { background: var(--bg); }
+  .shot-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
+  .shot-item { border-radius: var(--radius); overflow: hidden; box-shadow: var(--shadow); border: 1px solid var(--border); background: #fff; }
+  .shot-item .placeholder { height: 200px; }
+  .shot-item .shot-info { padding: 14px 18px; }
+  .shot-item .shot-info h4 { font-size: 15px; font-weight: 600; margin-bottom: 4px; }
+  .shot-item .shot-info p { font-size: 13px; color: var(--text-light); }
+
+  /* ── ACTIONS ── */
+  .actions-section { background: #fff; }
+  .action-table { width: 100%; border-collapse: collapse; font-size: 14px; }
+  .action-table th { background: var(--primary); color: #fff; padding: 10px 16px; text-align: left; font-weight: 600; }
+  .action-table td { padding: 9px 16px; border-bottom: 1px solid var(--border); }
+  .action-table tr:nth-child(even) { background: #f8f9fa; }
+  .action-table tr:hover { background: #e8f0fe; }
+  .action-table .tag { display: inline-block; padding: 2px 8px; border-radius: 4px; font-size: 11px; font-weight: 600; }
+  .tag-mouse  { background: #e8f0fe; color: var(--primary); }
+  .tag-input  { background: #e6f4ea; color: var(--accent); }
+  .tag-ocr    { background: #fef7e0; color: #e37400; }
+  .tag-flow   { background: #f3e8fd; color: #8430ce; }
+  .tag-sys    { background: #fce8e6; color: #c5221f; }
+
+  /* ── QUICK START ── */
+  .quickstart { background: linear-gradient(135deg, #f0f7ff 0%, #e8f5e9 100%); }
+  .steps { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; }
+  .step { background: #fff; border-radius: var(--radius); padding: 24px; box-shadow: var(--shadow); position: relative; }
+  .step-num { position: absolute; top: -12px; left: 16px; background: var(--primary); color: #fff; width: 28px; height: 28px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 14px; font-weight: 700; }
+  .step h4 { font-size: 15px; font-weight: 700; margin-bottom: 6px; margin-top: 8px; }
+  .step p { font-size: 13px; color: var(--text-light); }
+
+  /* ── FOOTER ── */
+  footer { background: #202124; color: rgba(255,255,255,.7); padding: 40px 24px; text-align: center; font-size: 13px; }
+  footer a { color: var(--primary); }
+  footer .foot-brand { font-size: 18px; font-weight: 700; color: #fff; margin-bottom: 8px; }
+
+  @media (max-width: 700px) {
+    .hero h1 { font-size: 28px; }
+    .shot-grid { grid-template-columns: 1fr; }
+    .nav-links { display: none; }
+  }
+</style>
+</head>
+<body data-page-node-id="WjuEirOa5QEdmYFBjsMIpj">
+
+<!-- NAV -->
+<nav data-page-node-id="6G9GuCumDfU69iD5BbSjcQ">
+  <div class="nav-inner" data-page-node-id="zP5f1g46bBKn5iKklnc034">
+    <span class="nav-brand" data-page-node-id="z58PzUHHYgFL7L6v5MDN4J">⌨ KeyMouseMate</span>
+    <div class="nav-links" data-page-node-id="MSnMB9dWwc4dH2LCU0nnJi">
+      <a href="#features" data-page-node-id="WTW0EeepWfYAe7qH2wHsIS">核心功能</a>
+      <a href="#actions" data-page-node-id="ovv8kGvoDoz844Rj1izTpk">动作类型</a>
+      <a href="#start" data-page-node-id="WtoNcz19bwlRq5hqFYevBK">快速入门</a>
+      <a href="#screenshots" data-page-node-id="yykDRvtksswz2UBm8gs5dW">截图</a>
+      <a href="https://github.com/SoftHubCC/KeyMouseMatePage/releases/latest" target="_blank" data-page-node-id="Gkm2Wq8vRtXbN5pLdYc1Az">⬇ 下载</a>
+      <a href="https://github.com/SoftHubCC/KeyMouseMatePage" target="_blank" data-page-node-id="Qnv7Xj3sLhYpD9wKbF2mEt">GitHub</a>
+      <a href="manual.html" target="_blank" data-page-node-id="bfRK9tk3peFBajZ1BZoZAZ">完整手册</a>
+    </div>
+  </div>
+</nav>
+
+<!-- HERO -->
+<div class="hero" data-page-node-id="2QkqXzrAwGHA1w7HFKCUAx">
+  <h1 data-page-node-id="Pjrw2Nu9En7aepo0xSzpcr">键鼠自动化助手</h1>
+  <p data-page-node-id="UaLZmUiLNmb4Wy4MhVFYlP">Windows 平台 RPA 工具——录制、调度、OCR 识别、弹窗处理，一站式自动化解决方案</p>
+  <div class="hero-btns" data-page-node-id="OeVcubZcjnips8YPamUtxx">
+    <a href="https://github.com/SoftHubCC/KeyMouseMatePage/releases/latest" target="_blank" class="btn btn-white" data-page-node-id="Ht4ZmL9sQvXkR2yPcN6wUd">⬇ 下载最新版</a>
+    <a href="#start" class="btn btn-outline" data-page-node-id="E5D3l5FK0n9ZMl0REQS2dl">🚀 快速入门</a>
+    <a href="manual.html" target="_blank" class="btn btn-outline" data-page-node-id="pKH8ZNeArSixEnnGB3KMVk">📖 查看手册</a>
+  </div>
+  <div class="screenshot-hero" style="margin-top:48px;" data-page-node-id="GuieCrRHyYOjB11t0keB54">
+    <!--div class="placeholder" style="height:380px;" data-page-node-id="rHJp29aqeQkWJYMTFz6IkZ">
+      <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" data-page-node-id="EA0jJCRVv3WHNWaEyYvtiK"><rect x="2" y="3" width="20" height="14" rx="2" data-page-node-id="ux8mXz1snLFWPmxV0kdXYd"/><line x1="8" y1="21" x2="16" y2="21" data-page-node-id="AoYPE1Oh6E6WDjWRxj4kkK"/><line x1="12" y1="17" x2="12" y2="21" data-page-node-id="AkfiDBImRfiisnBQ2X7MDB"/></svg>
+      <span data-page-node-id="6Ax5yAH4SIG27oSW4nJchp">主界面截图（860×380）</span>
+      <span class="ph-label" data-page-node-id="hDJGSU9OCE6x1kPBBCPGUa">将主界面截图放入手册/screenshot-main.png</span>
+    </div-->
+    <img src="screenshot-main.png" alt="KeyMouseMate 主界面截图">
+  </div>
+</div>
+
+<!-- FEATURES -->
+<section class="features" id="features" data-page-node-id="Ios0A1ompxXyiVcQet8fQF">
+  <div class="container" data-page-node-id="wF3FHCHrir4EFPhSm80IAu">
+    <div class="section-title" data-page-node-id="v6bapSDGIhCIfGRzpnL5mH">
+      <h2 data-page-node-id="7p1vEgoyY5U7pXwAblVEau">核心功能</h2>
+      <p data-page-node-id="HmtDXPUWiD0HqFCHddUVWT">33 种动作类型，覆盖几乎所有桌面自动化场景</p>
+    </div>
+    <div class="feat-grid" data-page-node-id="p9J7nnDznEXeBPlPCPsRDo">
+      <div class="feat-card" data-page-node-id="TN9xZtG5HJIeo0PV9QkcOR">
+        <div class="feat-icon blue" data-page-node-id="HYTIr04W8qD6C1DwAGXrzz">🖱</div>
+        <h3 data-page-node-id="eys7uLnbQ66s6tclPrfse5">33 种动作类型</h3>
+        <p data-page-node-id="I7FyGmuyK7pZYhaEDSgAH4">鼠标点击/拖动、键盘输入、OCR识别、文本等待、跳转控制、截图、密码输入等，覆盖完整自动化流程。</p>
+      </div>
+      <div class="feat-card" data-page-node-id="N7vmBLZeb9oFpKMz7vIEbN">
+        <div class="feat-icon green" data-page-node-id="tieLZAp3H5PxJL9E2RBWSY">🔁</div>
+        <h3 data-page-node-id="2aowUIFIFteWxuvSlzyW6w">灵活循环与条件</h3>
+        <p data-page-node-id="nYyTO4saUmDkF4bJ4Zuc1F">步骤级循环次数/间隔、变量表达式条件、OCR关键词条件，支持跳过/跳转/终止多种分支策略。</p>
+      </div>
+      <div class="feat-card" data-page-node-id="pKyNQNGydAjrXyXzYLuxYO">
+        <div class="feat-icon orange" data-page-node-id="Z7gyfNLKW9oTXCGIOEF5Ve">👁</div>
+        <h3 data-page-node-id="s4qs4qbbv6Ym7SNeqFHXP2">双引擎 OCR</h3>
+        <p data-page-node-id="BEmnLiQg4IAt8q0aBG3r68">RapidOCR（主力）+ PaddleOCR（可选），自动回退。支持正则匹配、小区域自动放大，中文识别准确率高。</p>
+      </div>
+      <div class="feat-card" data-page-node-id="hrh8Cmv3eU9DvBDVwlDP6v">
+        <div class="feat-icon purple" data-page-node-id="RWKZf5XvKOQ8aa7FY5V2S3">🛡</div>
+        <h3 data-page-node-id="HQ6dQFAGpDfahnNqx9LOAZ">弹窗监控处理</h3>
+        <p data-page-node-id="2LlWUAXHbXsxWFW8VuQ9go">后台监控线程 OCR 指定区域，命中关键词后自动执行处理节点并回到原位置继续，防重复触发冷却。</p>
+      </div>
+      <div class="feat-card" data-page-node-id="dzo6LYW43srEBABzdxbwR7">
+        <div class="feat-icon blue" data-page-node-id="YwkxFqHQE3cSRk42STnArG">⏰</div>
+        <h3 data-page-node-id="qn79aVLdIUE0yA7bBnnZsK">Cron 定时调度</h3>
+        <p data-page-node-id="H4GoihBEoS51XsqhnJTJvD">支持标准 7 字段 Cron 表达式，快捷模板、高级语法（L/W/NwD/#N），精确等待下次触发，无需轮询。</p>
+      </div>
+      <div class="feat-card" data-page-node-id="NwwnAWiEiDP00LKzbrmzJ3">
+        <div class="feat-icon green" data-page-node-id="62k5NgqkF9HDnuv38vGhtQ">🔐</div>
+        <h3 data-page-node-id="gq5GnrfCxT3st1BeiSs3Jj">密码安全存储</h3>
+        <p data-page-node-id="FIHJIQ6y5iahhM6lraRLyo">AES 加密存储密码库，输入文本动作选中密码条目后自动粘贴并清空剪贴板，日志自动打码。</p>
+      </div>
+      <div class="feat-card" data-page-node-id="S0xtGiZc6rXAeTxD0iVZKC">
+        <div class="feat-icon purple" data-page-node-id="hWEUUglYjFZsD8Afn3qw08">✨</div>
+        <h3 data-page-node-id="GX3DqXDuCK5jHS4iwWAYaH">实时可视化</h3>
+        <p data-page-node-id="e1WgL8zBJ1j6b8nAgC45qF">内置键鼠可视化：鼠标高亮、点击效果、按键显示、坐标、聚光灯、放大镜、浮动工具栏。菜单/托盘/热键/浮栏四处开关同步，状态持久化。</p>
+      </div>
+      <div class="feat-card" data-page-node-id="h0ca1W73u0UFAbzXil8PrY">
+        <div class="feat-icon blue" data-page-node-id="WQdHd0mTtMpg6XAQBatRXy">🎨</div>
+        <h3 data-page-node-id="6afTJU1m1GdGiTD9wkonP0">六套主题界面</h3>
+        <p data-page-node-id="xqQcjBjt4E2IEyZ6GDjrVE">Windows / Fusion / 深色 / 浅色 / qdarkstyle 深浅色六套主题一键切换，支持极简与自定义两种布局模式，长时间使用不伤眼。</p>
+      </div>
+      <div class="feat-card" data-page-node-id="gRbTcuodFsaEeNyhAnx1bf">
+        <div class="feat-icon orange" data-page-node-id="nbDc7mqaeG98xtkf0rPO6n">💾</div>
+        <h3 data-page-node-id="OudVCH2YFJvNNNPslrY671">数据分离与备份</h3>
+        <p data-page-node-id="bAiCyVO5bdf1WhrUaMd3Z6">程序设置（config/）与使用数据（userdata/）分区存放、互不干扰；方案/节点/动作均为独立 JSON 文件，复制目录即可备份迁移。</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ACTIONS -->
+<section class="actions-section" id="actions" data-page-node-id="pRCsPbjzVfE8XnDlhuGkDj">
+  <div class="container" data-page-node-id="EWfHKNpLsdhk6kDzBd3hNB">
+    <div class="section-title" data-page-node-id="PqSwFZGNuMV0lvIumqTFlJ">
+      <h2 data-page-node-id="tTTWi79bpCqw5I3tdnA9JC">动作类型一览</h2>
+      <p data-page-node-id="rpLdTWjbzYxPHLyYEKGFCP">所有动作均支持执行次数（loop_count）和后置等待设置</p>
+    </div>
+    <table class="action-table" data-page-node-id="lZicxF4EKIWW22zJyTg0gI">
+      <thead data-page-node-id="iJGNQIku0x17yOwWzYCNeM">
+        <tr data-page-node-id="wZ00ClMF64pHdhqageD6GN"><th data-page-node-id="n1EKPoQPAWotNBrtyqbcoE">动作</th><th data-page-node-id="RfwfZAqEiDTgJrc0Tfpigi">类型</th><th data-page-node-id="0InAIgAb7JOcAc78I0OTKa">参数</th><th data-page-node-id="szDZXDQChXg9BzEjCfoDKh">说明</th></tr>
+      </thead>
+      <tbody data-page-node-id="LPaDKQSlUZScj8NwrGBx1O">
+        <tr data-page-node-id="dDcNObiPHo1Mc1mADf8DX9"><td data-page-node-id="1MVZgzkahFUAflB8q5O6A0">左键单击 / 双击</td><td data-page-node-id="ebqyVHwHXuCzcb9j6l3x2D"><span class="tag tag-mouse" data-page-node-id="g3i0KkmmenrNqgTDQsTvI9">鼠标</span></td><td data-page-node-id="rhq39MKoRtocZAEwLwjoeU">区域坐标</td><td data-page-node-id="kePWDlOJcaGSvUGwgKdpM9">点击单个坐标点，支持左/右键、单击/双击</td></tr>
+        <tr data-page-node-id="HJxI5sql8KyUAyyoPcfVKw"><td data-page-node-id="xCwtqtIZxDEEYyeDTfmn4J">移动鼠标</td><td data-page-node-id="0vKL67IsW7HGDhjwq2WGDB"><span class="tag tag-mouse" data-page-node-id="zVf6knDDvtRW7YxOoXIxVw">鼠标</span></td><td data-page-node-id="QhpgbagITKmWceUbOi72PI">起点 + 终点（可选）</td><td data-page-node-id="mf0OIl1cABHwHSvpPoJGuh">直接移动或先到达起点再平滑移到终点</td></tr>
+        <tr data-page-node-id="BWNfYpfT8WFNYrwEs5iWfc"><td data-page-node-id="ikj9ExYg5WKkplzs9DViRW">拖动选择</td><td data-page-node-id="tGQX901ovFhkHuFvwFOiC4"><span class="tag tag-mouse" data-page-node-id="F7A4urOMQdrYbSDBqVkpqW">鼠标</span></td><td data-page-node-id="2aR1SZGRrykNHsNUT1tL1n">起点 + 终点</td><td data-page-node-id="mYotmBRpZARuUvNewpnIno">按住左键从起点拖到终点</td></tr>
+        <tr data-page-node-id="5vp41cm2xc8p7LzFTbTjww"><td data-page-node-id="PyZOZnBfihZ5PKVmnQRxc6">输入文本</td><td data-page-node-id="iJpjg8PrnZAcuDBmNFKFAZ"><span class="tag tag-input" data-page-node-id="RlGgpogRzxDUO0F8orNubg">输入</span></td><td data-page-node-id="npcIYsFm1KkEUpVNzs5sJ6">坐标 + 文本 + 清空 + 密码</td><td data-page-node-id="c70IFByi4IyaREOeRBpufB">点击后粘贴文本，支持 {变量} 模板和加密密码</td></tr>
+        <tr data-page-node-id="IyMGYt9lLtm5LcrKxGyTG0"><td data-page-node-id="U7s2guYRGXComCEqf7ifcw">OCR偏移点击输入</td><td data-page-node-id="u2iXyRYDvlLtkoAshGAOpq"><span class="tag tag-input" data-page-node-id="EoIAUUIuJTRHg35lIZbaFK">输入</span></td><td data-page-node-id="u2nmYNPY5P3pi6MkMbwoqA">区域 + 偏移 + 关键词 + 文本</td><td data-page-node-id="2ke9mJDo928RD7usggjESl">OCR识别关键词位置，按偏移点击后输入文本</td></tr>
+        <tr data-page-node-id="92SvMINbY7t6wauZ9VChyC"><td data-page-node-id="ZzHVirGymkmKeYFj0jRcXD">按键</td><td data-page-node-id="0F555euHDtxeRUofvJ7nkR"><span class="tag tag-input" data-page-node-id="74a2Vbx4OefdTswokp6HCF">输入</span></td><td data-page-node-id="7hvT3NBE9lecHQCGp2Au4y">键名</td><td data-page-node-id="CTj6vGW4a1gYJz4vFFA2w4">模拟按键：enter、ctrl+c、f5 等</td></tr>
+        <tr data-page-node-id="BkH4SYeDYp0THq4aJHpVx1"><td data-page-node-id="OsHaXusUUP8aytNFLNQgkD">等待</td><td data-page-node-id="pHAV8Sso52RyZFlNluFmkb"><span class="tag tag-ocr" data-page-node-id="rgEeqyLuXLThtuofd8bRuU">等待</span></td><td data-page-node-id="cnrGAPHLCxVaLCSqHHToyC">秒数</td><td data-page-node-id="6ERct7tiHrAWqUDDabUPo8">固定等待，可被暂停/停止打断</td></tr>
+        <tr data-page-node-id="YHu8LJDlMUvyu0mO6K0xD2"><td data-page-node-id="zH8J4V87xh5KdIEZY6MiUy">等待文本</td><td data-page-node-id="WBt1c3F3ukILHGFBVGu3Hk"><span class="tag tag-ocr" data-page-node-id="JGDjJX732yqCXgj2t4j3kI">等待</span></td><td data-page-node-id="BkWtfLPeTEhUjStTmBBeDe">区域 + 关键词 + 超时</td><td data-page-node-id="IRJB3gksRdjPVvTe1jTns1">轮询 OCR 直到出现关键词或超时</td></tr>
+        <tr data-page-node-id="4skx51Huj4WSxlHcGV6B6M"><td data-page-node-id="JYgfPCQYDLidTBC6e8Qqd7">OCR识别</td><td data-page-node-id="IC5Qdhy0uE6ku4OcyZ5WKp"><span class="tag tag-ocr" data-page-node-id="3C5OcvQfFmLAsgdYfmGpAh">OCR</span></td><td data-page-node-id="VDP8j5Wl7HHf2HgEca0QXT">区域 + 关键词 + 匹配模式</td><td data-page-node-id="sdKjC1fNFLx61BozyNWP9E">单次识别，命中/未命中可分别跳转</td></tr>
+        <tr data-page-node-id="8KWPLLKPrGjEDZHTAHvBtK"><td data-page-node-id="EoiTADiWRo6KlhGe6lwkLY">截图</td><td data-page-node-id="pHxLG0PqPNwHDtOGiux9rE"><span class="tag tag-sys" data-page-node-id="1nYxINiErPwq5LZsCEgiyr">系统</span></td><td data-page-node-id="TWBzPl4TFWTzlQargR8u4U">区域</td><td data-page-node-id="s3MpBWLjGSaZxLKjaS6Oze">保存截图到桌面</td></tr>
+        <tr data-page-node-id="4zm8LjCW2IK0KVHQa6VCyF"><td data-page-node-id="CgrifOcmKo5BecR8bM6zFC">打开文件</td><td data-page-node-id="kdj0vyaJdmZvnPJYvJqan2"><span class="tag tag-sys" data-page-node-id="dpbs7H1MbOTlORw09bRZmQ">系统</span></td><td data-page-node-id="t2yxxdjowt0RwOSaSH4fM7">路径</td><td data-page-node-id="ortR4rPF0B1hcZbMMI1r3y">调用 os.startfile 打开文件或启动程序</td></tr>
+        <tr data-page-node-id="iH4wHpdAIUYNV4xyz1nqWp"><td data-page-node-id="ZNIDrZFOq2b62WvCXPwW6e">窗口最大化</td><td data-page-node-id="CJhAJgyk5OijvMWwCnO0Nf"><span class="tag tag-sys" data-page-node-id="9qeVlOP4rlI2722QSlyQbi">系统</span></td><td data-page-node-id="QrV6ZQOfhxHhuJ1lWzWByU">—</td><td data-page-node-id="8o3NdaUhA9WgC6jGHUyJBk">激活前台窗口并最大化</td></tr>
+        <tr data-page-node-id="ybJQFHIgZUIcCY8Cp2AAPy"><td data-page-node-id="zKjsGl78x63iHgMph2wqzM">跳转</td><td data-page-node-id="gyhmg6o0Mpq0qrQtVXinzZ"><span class="tag tag-flow" data-page-node-id="LFFDE1Pwf7rrbIr0AhK2vq">流程</span></td><td data-page-node-id="nlbadEJkZSAyHoCExInafI">目标 #N</td><td data-page-node-id="b3mEpdmeYR6rSfa50vX2Wa">跳到节点内第 N 个动作（向后跳=循环）</td></tr>
+        <tr data-page-node-id="HNgC3niKa2nxnydDarndtO"><td data-page-node-id="G5clzQsIK812BHI5T74Du7">设置变量</td><td data-page-node-id="9zJAOuEmbyf255LH6d1vr9"><span class="tag tag-flow" data-page-node-id="OAATKFuYvCCAKY3i5WVZwu">流程</span></td><td data-page-node-id="e62xgD8n8i6JMYVOdGCM64">名称 + 值</td><td data-page-node-id="g2fShtaRGesEqVKhninmsi">创建 {变量.名称}，支持模板和类型推断</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- SCREENSHOTS -->
+<section class="screenshots" id="screenshots" data-page-node-id="zJ971CniS9DJjsCPwaq5J7">
+  <div class="container" data-page-node-id="kxpALYFNmyRHOQFmltmVBz">
+    <div class="section-title" data-page-node-id="DZsUSSpCvoDSwqZf4CitDv">
+      <h2 data-page-node-id="YYM7i6qL10EN5b3g6dZvc3">界面截图</h2>
+      <p data-page-node-id="b3GmJhQ2wbjrhBiryby8oU">直观了解程序各功能模块</p>
+    </div>
+    <div class="shot-grid" data-page-node-id="wDfwXlnb7RYTEZPeTQ2HVQ">
+      <div class="shot-item" data-page-node-id="DfTeDHNjq9hx2qWLkgdraw">
+        <div class="placeholder" style="height:200px;" data-page-node-id="flXzZSM2zAjpH9X9c5OGmx">
+          <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" data-page-node-id="d1sQCLcMgGgMIExieiIGKm"><rect x="2" y="3" width="20" height="14" rx="2" data-page-node-id="VyHuOeA361ZNDz7F9wV6eo"/><line x1="8" y1="21" x2="16" y2="21" data-page-node-id="smKLI5v3iWbHsO4OtRQNPZ"/><line x1="12" y1="17" x2="12" y2="21" data-page-node-id="GHJ66oQ9GdINfnnr8BNXxF"/></svg>
+          <span data-page-node-id="358BHN3pRlm1O3QLMojxm2">主界面</span>
+          <span class="ph-label" data-page-node-id="ZA3kVZlU7cew9wjZF9wViM">screenshot-main.png</span>
+        </div>
+        <div class="shot-info" data-page-node-id="gveG8QAZdmVqBXAfB5umCh"><h4 data-page-node-id="HgmBqgXXjlsPFAm8REwUP8">主界面</h4><p data-page-node-id="wSiHWA0BxNAnpvAA4Snqok">方案列表、步骤编辑、节点库、日志区一体化布局</p></div>
+      </div>
+      <div class="shot-item" data-page-node-id="YqUHRT54nEi3SZIPJe3mbc">
+        <div class="placeholder" style="height:200px;" data-page-node-id="HCfvZqb0KS5vkUxJccJF4b">
+          <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" data-page-node-id="HBVNIHJWP03DM4XXBbkjl7"><rect x="2" y="3" width="20" height="14" rx="2" data-page-node-id="zODVUDVjaInjaXIOHFOGHs"/><line x1="8" y1="21" x2="16" y2="21" data-page-node-id="NW8sCLpmCcI77mFK9AAGyF"/><line x1="12" y1="17" x2="12" y2="21" data-page-node-id="KWd1rjBHIl6sCX9WWG0XWD"/></svg>
+          <span data-page-node-id="Ef7YpllCBIwhctMdEFft2I">动作编辑</span>
+          <span class="ph-label" data-page-node-id="pXmzZa7OqVHRpcYxMDy5LB">screenshot-action.png</span>
+        </div>
+        <div class="shot-info" data-page-node-id="9qKiHsFHYM6JlbORByDAHJ"><h4 data-page-node-id="Vmsnf0JWVhSi9rSVMskwAA">动作编辑对话框</h4><p data-page-node-id="Pfer3kQc0jkOv4yfLF12xG">坐标追踪、匹配模式、执行次数、后置等待等参数配置</p></div>
+      </div>
+      <div class="shot-item" data-page-node-id="Yq0hZW5GKa24zR7CdTeiHt">
+        <div class="placeholder" style="height:200px;" data-page-node-id="isvJ7RtuAFP1IeXGP67JBO">
+          <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" data-page-node-id="XmNhbo9dSqNOobyPiXo3iU"><rect x="2" y="3" width="20" height="14" rx="2" data-page-node-id="Jgq7rNlN8GCuLdbYpu5CIE"/><line x1="8" y1="21" x2="16" y2="21" data-page-node-id="jSZWKtz4FWAB1rEDUM5qI1"/><line x1="12" y1="17" x2="12" y2="21" data-page-node-id="MzM21GLz7uJof4NqwoQVF4"/></svg>
+          <span data-page-node-id="HponzhlNZRD9r81mirZASH">步骤条件</span>
+          <span class="ph-label" data-page-node-id="W05Wg0BDLDahiuooPfAkpu">screenshot-condition.png</span>
+        </div>
+        <div class="shot-info" data-page-node-id="bs6ePmbslO28JTjrRHslPT"><h4 data-page-node-id="m5OTOyODDS6PPpuahKlQ5B">步骤条件配置</h4><p data-page-node-id="hP1d5whQm3zdaaEQ9pikSK">变量表达式、OCR 区域识别、条件不满足时的跳转/终止策略</p></div>
+      </div>
+      <div class="shot-item" data-page-node-id="yToN62taEznjhLohiBk6Rd">
+        <div class="placeholder" style="height:200px;" data-page-node-id="aDrkx1AOkFasz1bfIEGSQA">
+          <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" data-page-node-id="KwsCHmU5tnWE95WeYEkrmz"><rect x="2" y="3" width="20" height="14" rx="2" data-page-node-id="7fWzCkxQhQAzer8L2MIaCA"/><line x1="8" y1="21" x2="16" y2="21" data-page-node-id="CNjnsavpXk6ZgLLiMq4BmJ"/><line x1="12" y1="17" x2="12" y2="21" data-page-node-id="wpnXUFE5UuB7hu9zIhOGkh"/></svg>
+          <span data-page-node-id="MT1KxhQaiKiSAxIs2cQnsQ">Cron 调度</span>
+          <span class="ph-label" data-page-node-id="JDLeuC1UgklRgEEwVcFh3t">screenshot-cron.png</span>
+        </div>
+        <div class="shot-info" data-page-node-id="XFILkIMrdEJeZpnfaE0Srq"><h4 data-page-node-id="LPhHXokgGGBSEwG9f4wj9d">定时调度配置</h4><p data-page-node-id="EqvUBqKwEiQ9Z56QPKKlEN">Cron 表达式编辑、快捷模板、触发时间预览</p></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- QUICK START -->
+<section class="quickstart" id="start" data-page-node-id="FJsFThh00fumgJmkbtNaau">
+  <div class="container" data-page-node-id="WlUt2bA6o9ZpVu7O3TQpHG">
+    <div class="section-title" data-page-node-id="tmb1XlZgHEPwADQTZldjzM">
+      <h2 data-page-node-id="h0e0AXiP3qjKcrUt3opyAy">快速入门</h2>
+      <p data-page-node-id="t9FIeKWZqx9Q7upKaLiaVo">5 步完成你的第一个自动化方案</p>
+    </div>
+    <div class="steps" data-page-node-id="coInwnQBReMWBpmIHe6pBZ">
+      <div class="step" data-page-node-id="e4NnHyTegUiZ2NuJL7dC3u">
+        <div class="step-num" data-page-node-id="KG2sNovwJkxSVNsdb3Q7BC">1</div>
+        <h4 data-page-node-id="0ehzkf1zyGdyHx7k6lBE48">新建方案</h4>
+        <p data-page-node-id="71z1BCjIs4Q3ZapOP0Mal1">菜单「方案 → 新建方案」，输入名称保存</p>
+      </div>
+      <div class="step" data-page-node-id="i7DtR8ZiWFASgxGEFAWgUx">
+        <div class="step-num" data-page-node-id="R49Z6CJvoDEUSbBNixVtf1">2</div>
+        <h4 data-page-node-id="Pi1OX6IiUCG3v15bbZ2GF8">创建节点</h4>
+        <p data-page-node-id="EbOU606qf2IiAHXHVuRzwh">左侧「节点库」→「新建」，添加点击、输入等动作</p>
+      </div>
+      <div class="step" data-page-node-id="RofbyjQYYztETcZbdDq1p8">
+        <div class="step-num" data-page-node-id="iLO7bukKZWWzdJQWTKg5Py">3</div>
+        <h4 data-page-node-id="FN2ISRv7sriMXQznvP9VxO">添加步骤</h4>
+        <p data-page-node-id="Fppk51Rg5yKo32bDa7cjo2">右侧「方案步骤」→「添加步骤」，选择刚创建的节点</p>
+      </div>
+      <div class="step" data-page-node-id="HgNXLf6iGFijUWE9gY05EO">
+        <div class="step-num" data-page-node-id="myJ8WZELBR7wPN0wwP9kzl">4</div>
+        <h4 data-page-node-id="BQVYkrzab2CvcBsHjT7uRC">配置参数</h4>
+        <p data-page-node-id="aUYf8xq7DBPHjF0q62UA7F">设置循环次数、间隔、执行条件、出错策略等</p>
+      </div>
+      <div class="step" data-page-node-id="Hs0jFYMrZ9WufixVqyQpZE">
+        <div class="step-num" data-page-node-id="5XxKxgEDFbrvuOt63BAGbN">5</div>
+        <h4 data-page-node-id="zXIAVsA2UDs9hPA6kAepIQ">运行</h4>
+        <p data-page-node-id="6egxpkbhhyIpzdF9lCgbUN">点击「▶ 运行」或按 Ctrl+Shift+s 启动自动化</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer data-page-node-id="IKR1N6H0Q9CNLgR1gMLUeu">
+  <div class="foot-brand" data-page-node-id="BAm1Y41Dmo7QiU24N1D1Ea">⌨ 键鼠自动化助手 — KeyMouseMate</div>
+  <p data-page-node-id="6TFO2QtmpnBGjcIiQvdeAL">© 2026 软件驿站 SoftHub.CC &nbsp;|&nbsp; 支持 Windows 10 / 11（Python 3.13）</p>
+  <p style="margin-top:8px; opacity:.6;" data-page-node-id="7OdldNp7CMMhIaVJOAQZx6">
+    <a href="https://github.com/SoftHubCC/KeyMouseMatePage/releases/latest" target="_blank" data-page-node-id="Wk8sNv4RqTzXm2LpCb9dYf">⬇ 下载最新版</a>
+    &nbsp;·&nbsp;
+    <a href="https://github.com/SoftHubCC/KeyMouseMatePage" target="_blank" data-page-node-id="Jr3mQy7VxZhKcN6wTd2sLg">GitHub 项目</a>
+    &nbsp;·&nbsp;
+    <a href="manual.html" target="_blank" data-page-node-id="auWrJrgzdEi0H0jExbzVXs">完整用户手册</a>
+    &nbsp;·&nbsp;
+    <a href="https://keymousemate.softhub.cc" target="_blank" data-page-node-id="xxw0nUNgciLpe6Ampjtyhn">官方网站</a>
+  </p>
+</footer>
+
+</body>
+</html>
