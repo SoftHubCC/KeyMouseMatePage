@@ -1,9 +1,9 @@
 {
-  "version": "2.1.26257.1950",
+  "version": "2.1.26257.2050",
   "download_urls": {
-    "installer": "https://github.com/SoftHubCC/KeyMouseMateSite/releases/download/v2.1.26257.1950/KeyMouseMate_installer_v2.1.26257.1950.exe",
-    "portable": "https://github.com/SoftHubCC/KeyMouseMateSite/releases/download/v2.1.26257.1950/KeyMouseMate_portable_v2.1.26257.1950.zip"
+    "installer": "https://github.com/SoftHubCC/KeyMouseMateSite/releases/download/v2.1.26257.2050/KeyMouseMate_installer_v2.1.26257.2050.exe",
+    "portable": "https://github.com/SoftHubCC/KeyMouseMateSite/releases/download/v2.1.26257.2050/KeyMouseMate_portable_v2.1.26257.2050.zip"
   },
-  "changelog": "修复编辑节点窗口右键菜单「删除/上移/下移」功能无效——分支顺序错误导致 ActionInstance 时无法到达",
+  "changelog": "修复检查更新功能报错：NameError: name 'layout' is not defined；EXE每次启动时强制写入VERSION文件，确保检查更新可用",
   "release_date": "2026-09-14"
 }
