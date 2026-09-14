@@ -1,0 +1,9 @@
+{
+  "version": "2.1.26257.1902",
+  "download_urls": {
+    "installer": "https://github.com/SoftHubCC/KeyMouseMate/releases/download/v2.1.26257.1902/KeyMouseMate_installer_v2.1.26257.1902.exe",
+    "portable": "https://github.com/SoftHubCC/KeyMouseMate/releases/download/v2.1.26257.1902/KeyMouseMate_portable_v2.1.26257.1902.zip"
+  },
+  "changelog": "修复编辑节点窗口右键菜单删除/上移/下移功能无效——分支顺序错误",
+  "release_date": "2026-09-14"
+}
