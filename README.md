@@ -20,7 +20,7 @@ Windows 平台 RPA 工具——键盘、鼠标、自动化、调度、OCR 识别
 
 ## 🆕 最新更新
 
-👉 完整更新日志见 **[在线手册](https://softhubcc.github.io/KeyMouseMateSite/changelog.html)**
+👉 完整更新日志见 **[在线手册](changelog.html)**
 
 ## ✨ 核心功能
 
