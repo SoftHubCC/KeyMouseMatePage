@@ -1,9 +1,9 @@
 {
-  "version": "2.1.26258.1416",
+  "version": "2.1.26258.1528",
   "download_urls": {
-    "installer": "https://github.com/SoftHubCC/KeyMouseMateSite/releases/download/v2.1.26258.1416/KeyMouseMate_installer_v2.1.26258.1416.exe",
-    "portable": "https://github.com/SoftHubCC/KeyMouseMateSite/releases/download/v2.1.26258.1416/KeyMouseMate_portable_v2.1.26258.1416.zip"
+    "installer": "https://github.com/SoftHubCC/KeyMouseMateSite/releases/download/v2.1.26258.1528/KeyMouseMate_installer_v2.1.26258.1528.exe",
+    "portable": "https://github.com/SoftHubCC/KeyMouseMateSite/releases/download/v2.1.26258.1528/KeyMouseMate_portable_v2.1.26258.1528.zip"
   },
-  "changelog": "修复 app_build.bat 中所有 Python 脚本路径缺失下划线的问题，统一使用正确的文件名调用",
+  "changelog": "",
   "release_date": "2026-09-15"
 }
