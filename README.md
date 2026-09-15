@@ -18,9 +18,9 @@ Windows 平台 RPA 工具——键盘、鼠标、自动化、调度、OCR 识别
 | `KeyMouseMate_portable_v2.1.26258.1052.zip` | 便携版（解压即用） |
 
 
-## 🆕 最新更新 (2026-09-15)
+## 🆕 最新更新
 
-- **弹窗优化**：编辑公共节点/动作弹窗改为左右布局，固定宽度 520×140，默认焦点在取消按钮
+👉 完整更新日志见 **[在线手册](https://softhubcc.github.io/KeyMouseMateSite/changelog.html)**
 
 ## ✨ 核心功能
 
