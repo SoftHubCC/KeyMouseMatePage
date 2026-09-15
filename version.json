@@ -1,8 +1,8 @@
 {
-  "version": "2.1.26258.1013",
+  "version": "2.1.26258.1052",
   "download_urls": {
-    "installer": "https://github.com/SoftHubCC/KeyMouseMateSite/releases/download/v2.1.26258.1013/KeyMouseMate_installer_v2.1.26258.1013.exe",
-    "portable": "https://github.com/SoftHubCC/KeyMouseMateSite/releases/download/v2.1.26258.1013/KeyMouseMate_portable_v2.1.26258.1013.zip"
+    "installer": "https://github.com/SoftHubCC/KeyMouseMateSite/releases/download/v2.1.26258.1052/KeyMouseMate_installer_v2.1.26258.1052.exe",
+    "portable": "https://github.com/SoftHubCC/KeyMouseMateSite/releases/download/v2.1.26258.1052/KeyMouseMate_portable_v2.1.26258.1052.zip"
   },
   "changelog": "修复检查更新功能报错：NameError: name 'layout' is not defined；EXE每次启动时强制写入VERSION文件，确保检查更新可用",
   "release_date": "2026-09-15"
