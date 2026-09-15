@@ -1,9 +1,9 @@
 {
-  "version": "2.1.26258.1528",
+  "version": "2.1.26258.1553",
   "download_urls": {
-    "installer": "https://github.com/SoftHubCC/KeyMouseMateSite/releases/download/v2.1.26258.1528/KeyMouseMate_installer_v2.1.26258.1528.exe",
-    "portable": "https://github.com/SoftHubCC/KeyMouseMateSite/releases/download/v2.1.26258.1528/KeyMouseMate_portable_v2.1.26258.1528.zip"
+    "installer": "https://github.com/SoftHubCC/KeyMouseMateSite/releases/download/v2.1.26258.1553/KeyMouseMate_installer_v2.1.26258.1553.exe",
+    "portable": "https://github.com/SoftHubCC/KeyMouseMateSite/releases/download/v2.1.26258.1553/KeyMouseMate_portable_v2.1.26258.1553.zip"
   },
-  "changelog": "",
+  "changelog": "新增 APP_SHOW_UPDATE 开关，可通过设置 False 隐藏帮助菜单中的「检查更新」项",
   "release_date": "2026-09-15"
 }

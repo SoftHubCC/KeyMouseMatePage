@@ -203,7 +203,7 @@
 <nav>
   <span class="nav-brand">键鼠自动化助手</span>
   <span class="nav-badge">更新日志</span>
-  <a class="nav-link" href="用户手册.html">📖 用户手册</a>
+  <a class="nav-link" href="manual.html">📖 用户手册</a>
 </nav>
 
 <div class="page">
@@ -231,13 +231,38 @@
 
   <main class="timeline">
 
+    <!-- ================= 2.1.26258.1528 ================= -->
+    <article class="release is-latest" id="2-1-26258.1528">
+      <div class="release-card">
+        <div class="release-head">
+          <h2 class="version"><a href="#2-1-26258.1528">2.1.26258.1528</a></h2>
+          <time class="date" datetime="2026-09-15">2026-09-15</time>
+          <span class="tag-latest">最新</span>
+        </div>
+
+        <section class="group" data-cat="added">
+          <h3 class="group-title">新增</h3>
+          <ul>
+            <li>新增 APP_SHOW_UPDATE 开关，可通过设置 False 隐藏帮助菜单中的「检查更新」项</li>
+          </ul>
+        </section>
+
+        <section class="group" data-cat="fixed">
+          <h3 class="group-title">修复</h3>
+          <ul>
+            <li>修复动作管理表双击排序时序号列错位问题（序号现在表示行号，不参与排序）</li>
+            <li>规范化 app_build.bat 步骤编号为 [1/9]~[9/9]，版本号计算移至步骤5（Python检查后、PyInstaller前）</li>
+          </ul>
+        </section>
+      </div>
+    </article>
+
     <!-- ================= 2.1.26258.1052 ================= -->
-    <article class="release is-latest" id="2-1-26258.1052">
+    <article class="release" id="2-1-26258.1052">
       <div class="release-card">
         <div class="release-head">
           <h2 class="version"><a href="#2-1-26258.1052">2.1.26258.1052</a></h2>
           <time class="date" datetime="2026-09-15">2026-09-15</time>
-          <span class="tag-latest">最新</span>
         </div>
 
         <section class="group" data-cat="fixed">
@@ -1275,7 +1300,7 @@
 
   <footer class="page-footer">
     <p>更早的历史变更可查阅项目仓库的提交记录；相关文档见
-      <a href="用户手册.html">用户手册</a>。</p>
+      <a href="manual.html">用户手册</a>。</p>
   </footer>
 
 </div>
