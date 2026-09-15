@@ -33,13 +33,13 @@ Windows 平台 RPA 工具——键盘、鼠标、自动化、调度、OCR 识别
 
 ## 🆕 最新更新
 
-👉 完整更新日志见 **[更新日志](https://softhubcc.github.io/KeyMouseMateSite/changelog.html){target="_blank"}**
+👉 完整更新日志见 <b><a href="https://softhubcc.github.io/KeyMouseMateSite/changelog.html" target="_blank" rel="noopener noreferrer">更新日志</a></b>
 
 
 
 ## 📖 使用文档
 
-用户手册见 **[用户手册](https://softhubcc.github.io/KeyMouseMateSite/manual.html){target="_blank"}**
+用户手册见  <b><a href="https://softhubcc.github.io/KeyMouseMateSite/manual.html" target="_blank" rel="noopener noreferrer">用户手册</a></b>
 
 ---
 
