@@ -14,8 +14,8 @@ Windows 平台 RPA 工具——键盘、鼠标、自动化、调度、OCR 识别
 
 | 文件 | 说明 |
 |------|------|
-| `KeyMouseMate_installer_v2.1.26258.1052.exe` | 安装版（一键安装） |
-| `KeyMouseMate_portable_v2.1.26258.1052.zip` | 便携版（解压即用） |
+| `KeyMouseMate_installer_v2.1.26258.1416.exe` | 安装版（一键安装） |
+| `KeyMouseMate_portable_v2.1.26258.1416.zip` | 便携版（解压即用） |
 
 ## ✨ 核心功能
 
