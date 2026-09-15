@@ -33,6 +33,8 @@ Windows 平台 RPA 工具——键盘、鼠标、自动化、调度、OCR 识别
 
 ## 🆕 最新更新
 
+增加动作分类、节点分类、方案分类管理，动作和节点支持公共和私有模式，增加右键菜单便捷操作。
+
 👉 完整更新日志见 <b><a href="https://softhubcc.github.io/KeyMouseMateSite/changelog.html" target="_blank" rel="noopener noreferrer">更新日志</a></b>
 
 
