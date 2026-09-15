@@ -4,6 +4,6 @@
     "installer": "https://github.com/SoftHubCC/KeyMouseMateSite/releases/download/v2.1.26258.1052/KeyMouseMate_installer_v2.1.26258.1052.exe",
     "portable": "https://github.com/SoftHubCC/KeyMouseMateSite/releases/download/v2.1.26258.1052/KeyMouseMate_portable_v2.1.26258.1052.zip"
   },
-  "changelog": "修复检查更新功能报错：NameError: name 'layout' is not defined；EXE每次启动时强制写入VERSION文件，确保检查更新可用",
+  "changelog": "修复 app_build.bat 中所有 Python 脚本路径缺失下划线的问题，统一使用正确的文件名调用",
   "release_date": "2026-09-15"
 }
