@@ -26,7 +26,8 @@
   nav { position: sticky; top: 0; z-index: 200; background: #fff; border-bottom: 1px solid var(--border); box-shadow: 0 1px 4px rgba(0,0,0,.06); height: 56px; display: flex; align-items: center; padding: 0 24px; }
   .nav-brand { font-size: 16px; font-weight: 700; color: var(--primary); letter-spacing: .5px; }
   .nav-badge { margin-left: 12px; background: #e8f0fe; color: var(--primary); font-size: 11px; padding: 2px 8px; border-radius: 10px; font-weight: 600; }
-  .nav-link { margin-left: auto; color: var(--text-light); text-decoration: none; font-size: 13px; }
+  .nav-links { margin-left: auto; display: flex; gap: 16px; align-items: center; }
+  .nav-link { color: var(--text-light); text-decoration: none; font-size: 13px; }
   .nav-link:hover { color: var(--primary); }
 
   /* ── LAYOUT ── */
@@ -96,7 +97,10 @@
 <nav>
   <span class="nav-brand">键鼠自动化助手</span>
   <span class="nav-badge">用户手册</span>
-  <a class="nav-link" href="changelog.html">📋 更新日志</a>
+  <div class="nav-links">
+    <a class="nav-link" href="changelog.html">📋 更新日志</a>
+    <a class="nav-link" href="index.html">🏠 返回项目</a>
+  </div>
 </nav>
 
 <div class="layout">

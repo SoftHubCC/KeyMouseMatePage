@@ -66,7 +66,8 @@
   }
   .nav-brand { font-size: 16px; font-weight: 700; color: var(--nav-primary); letter-spacing: .5px; }
   .nav-badge { margin-left: 12px; background: #e8f0fe; color: var(--nav-primary); font-size: 11px; padding: 2px 8px; border-radius: 10px; font-weight: 600; }
-  .nav-link  { margin-left: auto; color: var(--nav-text); text-decoration: none; font-size: 13px; }
+  .nav-links { margin-left: auto; display: flex; gap: 16px; align-items: center; }
+  .nav-link  { color: var(--nav-text); text-decoration: none; font-size: 13px; }
   .nav-link:hover { color: var(--nav-primary); }
 
   .page { max-width: 860px; margin: 40px auto 0; padding: 0 20px; }
@@ -203,7 +204,10 @@
 <nav>
   <span class="nav-brand">键鼠自动化助手</span>
   <span class="nav-badge">更新日志</span>
-  <a class="nav-link" href="manual.html">📖 用户手册</a>
+  <div class="nav-links">
+    <a class="nav-link" href="manual.html">📖 用户手册</a>
+    <a class="nav-link" href="index.html">🏠 返回项目</a>
+  </div>
 </nav>
 
 <div class="page">
@@ -231,8 +235,33 @@
 
   <main class="timeline">
 
+    <!-- ================= 2.1.26258.1553 ================= -->
+    <article class="release is-latest" id="2-1-26258.1553">
+      <div class="release-card">
+        <div class="release-head">
+          <h2 class="version"><a href="#2-1-26258.1553">2.1.26258.1553</a></h2>
+          <time class="date" datetime="2026-09-15">2026-09-15</time>
+          <span class="tag-latest">最新</span>
+        </div>
+
+        <section class="group" data-cat="fixed">
+          <h3 class="group-title">修复</h3>
+          <ul>
+            <li>修复 upload_to_github.py 版本号更新逻辑：badge正则限制URL域名为github.com，实际badge URL是img.shields.io，导致无法匹配；改用字符串替换方式更可靠</li>
+          </ul>
+        </section>
+
+        <section class="group" data-cat="added">
+          <h3 class="group-title">新增</h3>
+          <ul>
+            <li>手册文件夹重命名为英文：manual/，内部文件改为 manual.html、changelog.html、manual-dev.html、manual-dev.md，同步更新所有引用路径</li>
+          </ul>
+        </section>
+      </div>
+    </article>
+
     <!-- ================= 2.1.26258.1528 ================= -->
-    <article class="release is-latest" id="2-1-26258.1528">
+    <article class="release" id="2-1-26258.1528">
       <div class="release-card">
         <div class="release-head">
           <h2 class="version"><a href="#2-1-26258.1528">2.1.26258.1528</a></h2>
