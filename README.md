@@ -5,7 +5,7 @@ Windows 平台 RPA 工具——键盘、鼠标、自动化、调度、OCR 识别
 🌐 **在线主页**：<https://softhubcc.github.io/KeyMouseMateSite/>
 
 [![Platform](https://img.shields.io/badge/platform-Windows%2010%2F11-blue)](https://www.microsoft.com/windows)
-[![Version](https://img.shields.io/badge/version-2.1.26258.1052-green)](https://github.com/SoftHubCC/KeyMouseMateSite/releases)
+[![Version](https://img.shields.io/badge/version-2.1.26258.1553-green)](https://github.com/SoftHubCC/KeyMouseMateSite/releases)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
 ## 📥 下载
